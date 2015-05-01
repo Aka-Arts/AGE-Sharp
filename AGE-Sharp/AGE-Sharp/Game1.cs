@@ -2,7 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Org.AkaArts.AgeSharp
+using Org.AkaArts.AgeSharp.Utils.Geometry2D;
+
+using System.Diagnostics;
+
+namespace Org.AkaArts.AgeSharp.GameProject
 {
     /// <summary>
     /// This is the main type for your game

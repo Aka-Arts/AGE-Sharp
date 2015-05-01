@@ -7,10 +7,11 @@
     <ProjectGuid>{5B7064EB-B360-4B8F-8DFB-A3B95D2C5F70}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Utils</RootNamespace>
-    <AssemblyName>Utils</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>Org.AkaArts.AgeSharp.Utils</RootNamespace>
+    <AssemblyName>Org.AkaArts.AgeSharp.Utils</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Geometry2D\Line4f.cs" />
+    <Compile Include="Geometry2D\Vector2f.cs" />
     <Compile Include="Geometry2D\Point2f.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

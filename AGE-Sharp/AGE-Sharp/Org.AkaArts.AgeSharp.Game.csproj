@@ -8,8 +8,8 @@
     <ProjectGuid>{864729AB-9A81-4AC4-85E7-58ABA281A753}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AGE_Sharp</RootNamespace>
-    <AssemblyName>AGE-Sharp</AssemblyName>
+    <RootNamespace>Org.AkaArts.AgeSharp.Game</RootNamespace>
+    <AssemblyName>Org.AkaArts.AgeSharp.Game</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>WindowsGL</MonoGamePlatform>
     <MonoGameContentBuilderExe>
@@ -56,14 +56,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\..\..\..\..\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
-      <Link>SDL.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Org.AkaArts.AgeSharp.Utils.csproj">
+      <Project>{5b7064eb-b360-4b8f-8dfb-a3b95d2c5f70}</Project>
+      <Name>Org.AkaArts.AgeSharp.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <!-- Specify the search path explicitly so the ResolveAssemblyReferences task picks the right ones -->
   <Target Name="BeforeResolveReferences">
