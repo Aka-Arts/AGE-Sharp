@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using Org.AkaArts.AgeSharp.Utils.Geometry2D;
-
 using System.Diagnostics;
 
 namespace Org.AkaArts.AgeSharp.GameProject
@@ -11,12 +9,13 @@ namespace Org.AkaArts.AgeSharp.GameProject
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class TestGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+
+        public TestGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
