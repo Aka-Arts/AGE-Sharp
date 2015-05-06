@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FarseerPhysics MonoGame">
-      <HintPath>..\..\..\..\Farseer Physics Engine 3.5 Samples\Farseer Physics Engine 3.5\bin\WindowsGL\Debug\FarseerPhysics MonoGame.dll</HintPath>
+      <HintPath>..\FarseerPhysics MonoGame.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.3.0.2238, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
