@@ -73,6 +73,8 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
             AllGuis.Add(newGui);
 
+            newGui.Initialize();
+
             newGui.LoadContent();
 
         }

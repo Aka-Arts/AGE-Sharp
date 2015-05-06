@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace AkaArts.AgeSharp.Utils.Screen
 {
-    public class Gui
+    public abstract class Gui
     {
 
         private List<IGuiEntity> GuiEntities = new List<IGuiEntity>();
@@ -31,7 +31,9 @@ namespace AkaArts.AgeSharp.Utils.Screen
             this.Opacity = 1;
         }
 
-        internal void LoadContent()
+        abstract internal void Initialize();
+
+        internal readonly void LoadContent()
         {
 
             foreach(IGuiEntity entity in this.GuiEntities){
@@ -44,7 +46,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         }
 
-        internal void Update(GameTime time)
+        internal readonly void Update(GameTime time)
         {
 
             List<IGuiEntity> EntitiesToUpdate = new List<IGuiEntity>();
@@ -63,7 +65,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         }
 
-        internal void Draw(SpriteBatch batch)
+        internal readonly void Draw(SpriteBatch batch)
         {
 
             foreach (IGuiEntity entity in this.GuiEntities)
@@ -75,7 +77,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         }
 
-        internal void UnloadContent()
+        internal readonly void UnloadContent()
         {
 
             foreach (IGuiEntity entity in this.GuiEntities)
