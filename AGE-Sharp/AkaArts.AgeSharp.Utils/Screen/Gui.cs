@@ -12,6 +12,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
     {
 
         private List<IGuiEntity> GuiEntities = new List<IGuiEntity>();
+        private List<IGuiEntity> GuiEntitiesToUpdate = new List<IGuiEntity>();
 
         private bool IsLoaded = false;
 
@@ -49,14 +50,14 @@ namespace AkaArts.AgeSharp.Utils.Screen
         internal readonly void Update(GameTime time)
         {
 
-            List<IGuiEntity> EntitiesToUpdate = new List<IGuiEntity>();
+            GuiEntitiesToUpdate.Clear();
 
             foreach (IGuiEntity entity in this.GuiEntities)
             {
-                EntitiesToUpdate.Add(entity);
+                GuiEntitiesToUpdate.Add(entity);
             }
 
-            foreach (IGuiEntity entity in EntitiesToUpdate)
+            foreach (IGuiEntity entity in GuiEntitiesToUpdate)
             {
 
                 entity.Update(time);
