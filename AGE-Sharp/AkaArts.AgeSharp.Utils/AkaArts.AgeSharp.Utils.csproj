@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,10 +56,13 @@
     <Compile Include="Screen\Gui.cs" />
     <Compile Include="Screen\GuiManager.cs" />
     <Compile Include="Screen\IGuiEntity.cs" />
+    <Compile Include="World\IWorldEntity.cs" />
+    <Compile Include="World\WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AGE_64.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
