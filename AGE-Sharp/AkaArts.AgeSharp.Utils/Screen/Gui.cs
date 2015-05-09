@@ -18,12 +18,17 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         public bool IsActive = true;
 
+        private float opacity;
+
         public float Opacity
-        { 
-            get;
+        {
+            get
+            {
+                return this.opacity;
+            }
             set
             {
-                this.Opacity = MathHelper.Clamp(value, 0, 1);
+                this.opacity = MathHelper.Clamp(value, 0, 1);
             } 
         }
 
@@ -34,7 +39,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         abstract internal void Initialize();
 
-        internal readonly void LoadContent()
+        internal void LoadContent()
         {
 
             foreach(IGuiEntity entity in this.GuiEntities){
@@ -47,7 +52,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         }
 
-        internal readonly void Update(GameTime time)
+        internal void Update(GameTime time)
         {
 
             GuiEntitiesToUpdate.Clear();
@@ -66,7 +71,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         }
 
-        internal readonly void Draw(SpriteBatch batch)
+        internal void Draw(SpriteBatch batch)
         {
 
             foreach (IGuiEntity entity in this.GuiEntities)
@@ -78,7 +83,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
 
         }
 
-        internal readonly void UnloadContent()
+        internal void UnloadContent()
         {
 
             foreach (IGuiEntity entity in this.GuiEntities)

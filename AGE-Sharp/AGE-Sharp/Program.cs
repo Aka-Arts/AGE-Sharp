@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace Org.AkaArts.AgeSharp.GameProject
+namespace AkaArts.AgeSharp.GameProject
 {
 #if WINDOWS || LINUX
     /// <summary>

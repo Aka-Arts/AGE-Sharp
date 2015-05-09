@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 using System.Diagnostics;
 
-namespace Org.AkaArts.AgeSharp.GameProject
+namespace AkaArts.AgeSharp.GameProject
 {
     /// <summary>
     /// This is the main type for your game
@@ -14,6 +14,7 @@ namespace Org.AkaArts.AgeSharp.GameProject
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        SpriteFont font;
 
         public TestGame()
             : base()
@@ -44,6 +45,8 @@ namespace Org.AkaArts.AgeSharp.GameProject
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            this.font = Content.Load<SpriteFont>("fonts/Arial-12-regular");
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -66,6 +69,8 @@ namespace Org.AkaArts.AgeSharp.GameProject
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -80,6 +85,11 @@ namespace Org.AkaArts.AgeSharp.GameProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            spriteBatch.DrawString(font, "no umlauts!!!??", new Vector2(100, 100), Color.Black);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

@@ -13,24 +13,24 @@ namespace AkaArts.AgeSharp.Utils.World
         /// <summary>
         /// For loading and initializing of this entity
         /// </summary>
-        public void LoadContent();
+        void LoadContent();
 
         /// <summary>
         /// For Updating this entity
         /// </summary>
         /// <param name="time">Current gameTime</param>
-        public void Update(GameTime time);
+        void Update(GameTime time);
 
         /// <summary>
         /// For Drawing this entity
         /// </summary>
         /// <param name="batch">The spriteBatch for drawing</param>
-        public void Draw(SpriteBatch batch);
+        void Draw(SpriteBatch batch);
 
         /// <summary>
         /// For unloadign all unmanaged assets
         /// </summary>
-        public void UnloadContent();
+        void UnloadContent();
 
     }
 }
