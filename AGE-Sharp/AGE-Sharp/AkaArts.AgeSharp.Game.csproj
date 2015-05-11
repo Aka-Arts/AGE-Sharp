@@ -64,6 +64,12 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AkaArts.AgeSharp.Utils\AkaArts.AgeSharp.Utils.csproj">
+      <Project>{dbca84d2-cb26-4f7b-9569-9c87ac986cdf}</Project>
+      <Name>AkaArts.AgeSharp.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <!-- Specify the search path explicitly so the ResolveAssemblyReferences task picks the right ones -->
   <Target Name="BeforeResolveReferences">
     <CreateProperty Value="$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows;$(AssemblySearchPaths)">

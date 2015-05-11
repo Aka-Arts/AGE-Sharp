@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 
 using System.Diagnostics;
 
+using AkaArts.AgeSharp.Utils.Screen;
+
 namespace AkaArts.AgeSharp.GameProject
 {
     /// <summary>
@@ -82,12 +84,12 @@ namespace AkaArts.AgeSharp.GameProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DarkGray);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(font, "no umlauts!!!??", new Vector2(100, 100), Color.Black);
+            spriteBatch.DrawOutlinedString(font, "Hallo Welt", new Vector2(100, 100), Color.White, Color.Black, 0f, new Vector2(0,0),1f,SpriteEffects.None,1f);
 
             spriteBatch.End();
 

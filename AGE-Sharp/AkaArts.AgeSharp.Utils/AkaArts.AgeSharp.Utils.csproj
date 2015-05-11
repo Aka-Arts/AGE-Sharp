@@ -56,6 +56,7 @@
     <Compile Include="Screen\Gui.cs" />
     <Compile Include="Screen\GuiManager.cs" />
     <Compile Include="Screen\IGuiEntity.cs" />
+    <Compile Include="Screen\SpritebatchExtension.cs" />
     <Compile Include="World\IWorldEntity.cs" />
     <Compile Include="World\WorldManager.cs" />
   </ItemGroup>
