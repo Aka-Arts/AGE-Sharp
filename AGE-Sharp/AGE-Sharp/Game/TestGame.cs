@@ -18,6 +18,8 @@ namespace AkaArts.AgeSharp.GameProject
 
         SpriteFont font;
 
+        Texture2D testHead;
+
         public TestGame()
             : base()
         {
@@ -48,6 +50,8 @@ namespace AkaArts.AgeSharp.GameProject
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             this.font = Content.Load<SpriteFont>("fonts/Arial-12-regular");
+
+            this.testHead = Content.Load<Texture2D>("images/test-head");
 
             // TODO: use this.Content to load your game content here
         }
@@ -87,9 +91,11 @@ namespace AkaArts.AgeSharp.GameProject
             GraphicsDevice.Clear(Color.DarkGray);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            spriteBatch.DrawOutlinedString(font, "Hallo Welt", new Vector2(100, 100), Color.White, Color.Black, 0f, new Vector2(0,0),1f,SpriteEffects.None,1f);
+            spriteBatch.DrawOutlinedString(font, "Hallo Welt", new Vector2(300, 100), Color.White, Color.Black, 0f, new Vector2(0,0),1f,SpriteEffects.None,1f);
+
+            spriteBatch.Draw(this.testHead, new Vector2(50, 50),null, new Color(255,204,173),0, Vector2.Zero, 4f, SpriteEffects.None, 1f);
 
             spriteBatch.End();
 
