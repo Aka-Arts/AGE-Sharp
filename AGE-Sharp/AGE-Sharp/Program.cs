@@ -18,7 +18,7 @@ namespace AkaArts.AgeSharp.GameProject
         [STAThread]
         static void Main()
         {
-            using (var game = new TestGame())
+            using (var game = new Main.SpaceGame())
                 game.Run();
         }
     }

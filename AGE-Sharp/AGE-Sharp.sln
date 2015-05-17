@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkaArts.AgeSharp.Game", "AGE-Sharp\AkaArts.AgeSharp.Game.csproj", "{864729AB-9A81-4AC4-85E7-58ABA281A753}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkaArts.AgeSharp.GameProject", "AGE-Sharp\AkaArts.AgeSharp.GameProject.csproj", "{864729AB-9A81-4AC4-85E7-58ABA281A753}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkaArts.AgeSharp.Utils", "AkaArts.AgeSharp.Utils\AkaArts.AgeSharp.Utils.csproj", "{DBCA84D2-CB26-4F7B-9569-9C87AC986CDF}"
 EndProject
