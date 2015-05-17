@@ -15,7 +15,16 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
         Texture2D skin;
 
-        Vector2 position;
+        Texture2D explosion;
+
+        float explosionAlpha;
+
+        bool fadingOn;
+
+        readonly float explosionFadeOnSpeed = 3f;
+        readonly float explosionFadeOffSpeed = 1.3f;
+
+        internal Vector2 position;
 
         readonly float vertical_velocity = 300f;
         readonly float forward_velocity = 250f;
@@ -29,12 +38,12 @@ namespace AkaArts.AgeSharp.GameProject.Main
         Rectangle AABB1;
         Rectangle AABB2;
 
-        bool intersects = false;
+        bool dead = false;
 
         public Ship()
         {
 
-            this.position = new Vector2(100,300);
+            this.Reset();
 
         }
 
@@ -43,12 +52,14 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
             this.skin = content.Load<Texture2D>("images/spaceship");
 
+            this.explosion = content.Load<Texture2D>("images/explosion");
+
         }
 
         public void Update(GameTime time, KeyboardState keyStates)
         {
 
-            this.intersects = false;
+            this.dead = false;
 
             if (keyStates.IsKeyDown(Keys.W))
             {
@@ -107,7 +118,8 @@ namespace AkaArts.AgeSharp.GameProject.Main
                 if (ast.AABB.Intersects(this.AABB1) || ast.AABB.Intersects(this.AABB2))
                 {
 
-                    intersects = true;
+                    this.dead = true;
+                    SpaceGame.GameOver();
 
                 }
 
@@ -118,21 +130,40 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
         public void Draw(GameTime time, SpriteBatch batch)
         {
-
-            batch.Draw(texture: this.skin, position: this.position, scale: new Vector2(2f), origin: new Vector2(32,16), rotation: 0f , color: Color.White);
-
-            if (intersects)
+            if (this.dead)
             {
+                batch.Draw(texture: this.explosion, position: this.position, scale: new Vector2(2f), origin: new Vector2(32, 32), rotation: 0f, color: new Color(1,1,1,explosionAlpha));
 
-                batch.DrawString(SpaceGame.font, "Intersects!", new Vector2(400, 400), Color.White);
+                if (this.fadingOn)
+                {
+                    this.explosionAlpha += (explosionFadeOnSpeed * time.ElapsedGameTime.Milliseconds / 1000);
+
+                    if (this.explosionAlpha > 1)
+                    {
+                        this.explosionAlpha = 1;
+
+                        this.fadingOn = false;
+
+                    }
+                }
+                else
+                {
+                    this.explosionAlpha -= (explosionFadeOffSpeed * time.ElapsedGameTime.Milliseconds / 1000);
+
+                    if (this.explosionAlpha < 0)
+                    {
+                        this.explosionAlpha = 0;
+                    }
+                }
+
+                
 
             }
             else
             {
-
-                batch.DrawString(SpaceGame.font, "All fine...", new Vector2(400, 400), Color.White);
-
+                batch.Draw(texture: this.skin, position: this.position, scale: new Vector2(2f), origin: new Vector2(32, 16), rotation: 0f, color: Color.White);
             }
+            
 
             if (SpaceGame.DEBUGGING)
             {
@@ -143,6 +174,17 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
             }
 
+
+        }
+
+        public void Reset()
+        {
+
+            this.position = new Vector2(100, 300);
+
+            this.explosionAlpha = 0;
+
+            this.fadingOn = true;
 
         }
 

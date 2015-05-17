@@ -75,6 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AGE_64.ico" />
+    <Content Include="OpenAL32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wrap_oal.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

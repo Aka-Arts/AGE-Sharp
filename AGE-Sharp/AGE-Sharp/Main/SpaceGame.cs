@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 using System;
 using System.Collections.Generic;
@@ -19,19 +20,34 @@ namespace AkaArts.AgeSharp.GameProject.Main
         SpriteBatch spriteBatch;
 
         public static SpriteFont font;
-
         Ship ship;
 
+        Texture2D LaserCharge;
+
+        SoundEffect laserShot;
+
+        readonly int laserCoolDown = 300;
+
+        int nextLaser = 0;
+
+        readonly int ChargeCoolDown = 3000;
+
+        int nextCharge = 0;
+
         private Random random = new Random();
+
+        readonly int maxShots = 3;
+
+        int shots;
 
         internal static List<Asteroid> asteroids = new List<Asteroid>();
 
         readonly int spawnCoolDownMin = 350;
-
         readonly int spawnCoolDownMax = 1600;
 
-
         int nextSpawn = 0;
+
+        static bool over = false;
 
         // debugging
 
@@ -60,6 +76,8 @@ namespace AkaArts.AgeSharp.GameProject.Main
             // TODO: Add your initialization logic here
 
             this.ship = new Ship();
+
+            Reset();
             
             base.Initialize();
         }
@@ -74,6 +92,10 @@ namespace AkaArts.AgeSharp.GameProject.Main
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("fonts/Nulshock-14-regular");
+
+            LaserCharge = Content.Load<Texture2D>("images/laser");
+
+            laserShot = Content.Load<SoundEffect>("sounds/lasergun");
 
             ship.LoadContent(Content);
 
@@ -122,11 +144,11 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
                     Asteroid.Size size = Asteroid.Size.Small;
 
-                    if (random.Next(0,5) == 2)
+                    if (random.Next(0, 5) == 2)
                     {
                         size = Asteroid.Size.Big;
                     }
-                    
+
 
                     int Y = random.Next(40, 560);
 
@@ -136,13 +158,13 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
                     asteroids.Add(newAst);
 
-                    nextSpawn = random.Next(spawnCoolDownMin,spawnCoolDownMax);
+                    nextSpawn = random.Next(spawnCoolDownMin, spawnCoolDownMax);
 
                 }
 
             }
 
-            for (int i = 0; i < asteroids.Count ; i++)
+            for (int i = 0; i < asteroids.Count; i++)
             {
                 asteroids[i].Update(gameTime);
 
@@ -153,7 +175,56 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
             }
 
-            this.ship.Update(gameTime, KeyState);
+            if (!over)
+            {
+
+                if (KeyState.IsKeyDown(Keys.Space) && nextLaser == 0 && shots > 0)
+                {
+                    shots--;
+
+                    nextLaser = laserCoolDown;
+
+                    laserShot.Play();
+
+                }
+
+                this.ship.Update(gameTime, KeyState);
+
+                nextLaser -= gameTime.ElapsedGameTime.Milliseconds;
+
+                if (nextLaser < 0)
+                {
+                    nextLaser = 0;
+                }
+
+
+                // recharge
+
+                if (shots < maxShots)
+                {
+
+                    nextCharge -= gameTime.ElapsedGameTime.Milliseconds;
+
+                    if (nextCharge < 0)
+                    {
+                        shots++;
+                        nextCharge = ChargeCoolDown;
+                    }
+
+
+                }
+
+
+            }
+            else
+            {
+
+                if (KeyState.IsKeyDown(Keys.Enter))
+                {
+                    Reset();
+                }
+
+            }
 
             // TODO: Add your update logic here
 
@@ -183,10 +254,82 @@ namespace AkaArts.AgeSharp.GameProject.Main
                 spriteBatch.DrawString(font, "DEBUG MODE", Vector2.Zero, Color.Red);
                 spriteBatch.DrawString(font, "Active Asteroids: " + asteroids.Count, new Vector2(0,20), Color.Red);
             }
+
+            Vector2 shot1 = new Vector2(0, 6);
+            Vector2 shot2 = new Vector2(0, 14);
+            Vector2 shot3 = new Vector2(0, 22);
+
+            switch (shots)
+            {
+                case 3:
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot1, color: Color.White, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot2, color: Color.White, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot3, color: Color.White, scale: new Vector2(2f));
+
+                    break;
+                case 2:
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot1, color: Color.White, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot2, color: Color.White, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot3, color: Color.DarkGray, scale: new Vector2(2f));
+
+                    break;
+                case 1:
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot1, color: Color.White, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot2, color: Color.DarkGray, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot3, color: Color.DarkGray, scale: new Vector2(2f));
+
+                    break;
+                default:
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot1, color: Color.DarkGray, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot2, color: Color.DarkGray, scale: new Vector2(2f));
+
+                    spriteBatch.Draw(texture: LaserCharge, position: shot3, color: Color.DarkGray, scale: new Vector2(2f));
+
+                    break;
+            }
+
+            if (over)
+            {
+
+                spriteBatch.DrawString(font, "GAME OVER", new Vector2(500, 300), Color.LightGray, 0f, new Vector2(80,12),2f, SpriteEffects.None, 1);
+                spriteBatch.DrawString(font, "Press ENTER to play again!", new Vector2(500, 350), Color.LightSteelBlue, 0f, new Vector2(190, 12), 1f, SpriteEffects.None, 1);
+
+            }
             
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public static void GameOver(){
+
+            over = true;
+
+        }
+
+        private void Reset()
+        {
+
+            over = false;
+            asteroids.Clear();
+
+            shots = maxShots;
+
+            nextCharge = ChargeCoolDown;
+
+            ship.Reset();
+
         }
     }
 }
