@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace AkaArts.AgeSharp.GameProject.Main
 {
@@ -16,6 +17,8 @@ namespace AkaArts.AgeSharp.GameProject.Main
         Texture2D skin;
 
         Texture2D explosion;
+
+        SoundEffect explosionEffect;
 
         float explosionAlpha;
 
@@ -53,6 +56,8 @@ namespace AkaArts.AgeSharp.GameProject.Main
             this.skin = content.Load<Texture2D>("images/spaceship");
 
             this.explosion = content.Load<Texture2D>("images/explosion");
+
+            this.explosionEffect = content.Load<SoundEffect>("sounds/explosion");
 
         }
 
@@ -109,17 +114,26 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
             }
 
-            this.AABB1 = new Rectangle((int)this.position.X - 64, (int)this.position.Y - 28, 82, 56);
-            this.AABB2 = new Rectangle((int)this.position.X, (int)this.position.Y + 10, 64, 12);
+            this.AABB1.X = (int)this.position.X - 64;
+            this.AABB1.Y = (int)this.position.Y - 28;
+            this.AABB2.X = (int)this.position.X;
+            this.AABB2.Y = (int)this.position.Y + 10;
 
             foreach (Asteroid ast in SpaceGame.asteroids)
             {
+
+                if (ast.hit)
+                {
+                    continue;
+                }
 
                 if (ast.AABB.Intersects(this.AABB1) || ast.AABB.Intersects(this.AABB2))
                 {
 
                     this.dead = true;
                     SpaceGame.GameOver();
+
+                    this.explosionEffect.Play(1,0,0);
 
                 }
 
@@ -185,6 +199,9 @@ namespace AkaArts.AgeSharp.GameProject.Main
             this.explosionAlpha = 0;
 
             this.fadingOn = true;
+
+            this.AABB1 = new Rectangle((int)this.position.X - 64, (int)this.position.Y - 28, 82, 56);
+            this.AABB2 = new Rectangle((int)this.position.X, (int)this.position.Y + 10, 64, 12);
 
         }
 

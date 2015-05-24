@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using AkaArts.AgeSharp.Utils.Collision;
 
 namespace AkaArts.AgeSharp.GameProject.Main
 {
@@ -42,8 +43,10 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
         internal static List<Asteroid> asteroids = new List<Asteroid>();
 
+        internal static List<LaserShot> laserShots = new List<LaserShot>();
+
         readonly int spawnCoolDownMin = 350;
-        readonly int spawnCoolDownMax = 1600;
+        readonly int spawnCoolDownMax = 1200;
 
         int nextSpawn = 0;
 
@@ -52,6 +55,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
         // debugging
 
         public static bool DEBUGGING = false;
+
 
         public SpaceGame()
             : base()
@@ -80,6 +84,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
             Reset();
             
             base.Initialize();
+
         }
 
         /// <summary>
@@ -133,36 +138,33 @@ namespace AkaArts.AgeSharp.GameProject.Main
                 DEBUGGING = true;
             }
 
-            if (asteroids.Count <= 16)
+
+            nextSpawn -= gameTime.ElapsedGameTime.Milliseconds;
+
+            if (nextSpawn < 0)
             {
+                // spawn next asteriod
 
-                nextSpawn -= gameTime.ElapsedGameTime.Milliseconds;
+                Asteroid.Size size = Asteroid.Size.Small;
 
-                if (nextSpawn < 0)
+                if (random.Next(0, 5) == 2)
                 {
-                    // spawn next asteriod
-
-                    Asteroid.Size size = Asteroid.Size.Small;
-
-                    if (random.Next(0, 5) == 2)
-                    {
-                        size = Asteroid.Size.Big;
-                    }
-
-
-                    int Y = random.Next(40, 560);
-
-                    Asteroid newAst = new Asteroid(1050, Y, size);
-
-                    newAst.LoadContent(Content);
-
-                    asteroids.Add(newAst);
-
-                    nextSpawn = random.Next(spawnCoolDownMin, spawnCoolDownMax);
-
+                    size = Asteroid.Size.Big;
                 }
 
+
+                int Y = random.Next(40, 560);
+
+                Asteroid newAst = new Asteroid(1050, Y, size);
+
+                newAst.LoadContent(Content);
+
+                asteroids.Add(newAst);
+
+                nextSpawn = random.Next(spawnCoolDownMin, spawnCoolDownMax);
+
             }
+
 
             for (int i = 0; i < asteroids.Count; i++)
             {
@@ -185,6 +187,23 @@ namespace AkaArts.AgeSharp.GameProject.Main
                     nextLaser = laserCoolDown;
 
                     laserShot.Play();
+
+                    LaserShot newShot = new LaserShot((int)ship.position.X + 38, (int)ship.position.Y + 28);
+
+                    newShot.LoadContent(Content);
+
+                    laserShots.Add(newShot);
+
+                }
+
+                for (int i = 0; i < laserShots.Count; i++)
+                {
+                    laserShots[i].Update(gameTime);
+
+                    if (laserShots[i].Dead)
+                    {
+                        laserShots.RemoveAt(i--);
+                    }
 
                 }
 
@@ -249,10 +268,9 @@ namespace AkaArts.AgeSharp.GameProject.Main
                 ast.Draw(gameTime, spriteBatch);
             }
 
-            if (DEBUGGING)
+            foreach (var laser in laserShots)
             {
-                spriteBatch.DrawString(font, "DEBUG MODE", Vector2.Zero, Color.Red);
-                spriteBatch.DrawString(font, "Active Asteroids: " + asteroids.Count, new Vector2(0,20), Color.Red);
+                laser.Draw(gameTime, spriteBatch);
             }
 
             Vector2 shot1 = new Vector2(0, 6);
@@ -306,6 +324,13 @@ namespace AkaArts.AgeSharp.GameProject.Main
                 spriteBatch.DrawString(font, "Press ENTER to play again!", new Vector2(500, 350), Color.LightSteelBlue, 0f, new Vector2(190, 12), 1f, SpriteEffects.None, 1);
 
             }
+
+            if (DEBUGGING)
+            {
+                spriteBatch.DrawString(font, "DEBUG MODE", new Vector2(50, 0), Color.Red);
+                spriteBatch.DrawString(font, "Active Asteroids: " + asteroids.Count, new Vector2(50, 16), Color.Red);
+                spriteBatch.DrawString(font, "Active Lasers: " + laserShots.Count, new Vector2(50, 32), Color.Red);
+            }
             
             spriteBatch.End();
 
@@ -315,6 +340,8 @@ namespace AkaArts.AgeSharp.GameProject.Main
         public static void GameOver(){
 
             over = true;
+
+            laserShots.Clear();
 
         }
 

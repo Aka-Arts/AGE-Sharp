@@ -86,3 +86,9 @@
 /processorParam:TextureFormat=Color
 /build:images/explosion.png
 
+#begin sounds/explosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/explosion.wav
+

@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main\Asteroid.cs" />
+    <Compile Include="Main\LaserShot.cs" />
     <Compile Include="Main\RectangleExtension.cs" />
     <Compile Include="Main\Ship.cs" />
     <Compile Include="Main\SpaceGame.cs" />
@@ -106,6 +107,12 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AkaArts.AgeSharp.Utils\AkaArts.AgeSharp.Utils.csproj">
+      <Project>{dbca84d2-cb26-4f7b-9569-9c87ac986cdf}</Project>
+      <Name>AkaArts.AgeSharp.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <!-- Specify the search path explicitly so the ResolveAssemblyReferences task picks the right ones -->
   <Target Name="BeforeResolveReferences">
