@@ -20,6 +20,8 @@ namespace AkaArts.AgeSharp.GameProject.Main
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public static GraphicsDevice CurrentGraphicsDevice;
+
         public static SpriteFont font;
         Ship ship;
 
@@ -79,6 +81,8 @@ namespace AkaArts.AgeSharp.GameProject.Main
         {
             // TODO: Add your initialization logic here
 
+            CurrentGraphicsDevice = GraphicsDevice;
+
             this.ship = new Ship();
 
             Reset();
@@ -93,6 +97,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
         /// </summary>
         protected override void LoadContent()
         {
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -358,5 +363,6 @@ namespace AkaArts.AgeSharp.GameProject.Main
             ship.Reset();
 
         }
+
     }
 }

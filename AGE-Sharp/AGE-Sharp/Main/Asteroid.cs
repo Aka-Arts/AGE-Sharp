@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
+using AkaArts.AgeSharp.Utils.Collision;
+
 namespace AkaArts.AgeSharp.GameProject.Main
 {
     class Asteroid
@@ -56,7 +58,9 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
         bool fadeDarker = true;
 
-        internal Rectangle AABB;
+        //internal Rectangle AABB;
+
+        internal Polygon2D collisionShape;
 
         public Asteroid(int x, int y, Size size)
         {
@@ -71,7 +75,9 @@ namespace AkaArts.AgeSharp.GameProject.Main
             {
                 case Size.Small:
 
-                    this.AABB = new Rectangle((int)this.position.X - 28, (int)this.position.Y - 28, 54, 54);
+                    //this.AABB = new Rectangle((int)this.position.X - 28, (int)this.position.Y - 28, 54, 54);
+
+                    this.collisionShape = Polygon2D.FromRectangle(SpaceGame.CurrentGraphicsDevice, this.position, new Rectangle(-28, -28, 54, 54));
 
                     this.origin = new Vector2(16,16);
 
@@ -79,7 +85,10 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
                 case Size.Big:     
 
-                    this.AABB = new Rectangle((int)this.position.X - 52, (int)this.position.Y - 58, 108, 108);
+                    //this.AABB = new Rectangle((int)this.position.X - 52, (int)this.position.Y - 58, 108, 108);
+
+                    this.collisionShape = Polygon2D.FromRectangle(SpaceGame.CurrentGraphicsDevice, this.position, new Rectangle(-52, -58, 108, 108));
+
 
                     this.origin = new Vector2(32,32);
 
@@ -127,14 +136,17 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
                     //this.AABB = new Rectangle((int)this.position.X - 28, (int)this.position.Y - 28, 54, 54);
 
-                    this.AABB.X = (int)this.position.X - 28;
+                    //this.AABB.X = (int)this.position.X - 28;
 
+                    this.collisionShape.Origin = this.position;
 
                     break;
 
                 case Size.Big:
 
-                    this.AABB.X = (int)this.position.X - 52;
+                    //this.AABB.X = (int)this.position.X - 52;
+
+                    this.collisionShape.Origin = this.position;
 
                     break;
 
@@ -265,7 +277,9 @@ namespace AkaArts.AgeSharp.GameProject.Main
                 if (SpaceGame.DEBUGGING)
                 {
 
-                    batch.DrawBorder(this.AABB, 1, Color.Red);
+                    //batch.DrawBorder(this.AABB, 1, Color.Red);
+
+                    this.collisionShape.Draw(Color.Red);
 
                 }
 

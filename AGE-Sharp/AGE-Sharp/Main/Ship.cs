@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 
+using AkaArts.AgeSharp.Utils.Collision;
+
 namespace AkaArts.AgeSharp.GameProject.Main
 {
     class Ship
@@ -38,8 +40,10 @@ namespace AkaArts.AgeSharp.GameProject.Main
         readonly float maxY = 560f;
 
 
-        Rectangle AABB1;
-        Rectangle AABB2;
+        //Rectangle AABB1;
+        //Rectangle AABB2;
+
+        Polygon2D collisionShape;
 
         bool dead = false;
 
@@ -114,10 +118,12 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
             }
 
-            this.AABB1.X = (int)this.position.X - 64;
-            this.AABB1.Y = (int)this.position.Y - 28;
-            this.AABB2.X = (int)this.position.X;
-            this.AABB2.Y = (int)this.position.Y + 10;
+            //this.AABB1.X = (int)this.position.X - 64;
+            //this.AABB1.Y = (int)this.position.Y - 28;
+            //this.AABB2.X = (int)this.position.X;
+            //this.AABB2.Y = (int)this.position.Y + 10;
+
+            this.collisionShape.Origin = this.position;
 
             foreach (Asteroid ast in SpaceGame.asteroids)
             {
@@ -127,13 +133,13 @@ namespace AkaArts.AgeSharp.GameProject.Main
                     continue;
                 }
 
-                if (ast.AABB.Intersects(this.AABB1) || ast.AABB.Intersects(this.AABB2))
+                if (ast.collisionShape.Intersect(this.collisionShape).intersects)
                 {
 
                     this.dead = true;
                     SpaceGame.GameOver();
 
-                    this.explosionEffect.Play(1,0,0);
+                    this.explosionEffect.Play(1, 0, 0);
 
                 }
 
@@ -182,9 +188,11 @@ namespace AkaArts.AgeSharp.GameProject.Main
             if (SpaceGame.DEBUGGING)
             {
 
-                batch.DrawBorder(this.AABB1, 1, Color.Lime);
+                //batch.DrawBorder(this.AABB1, 1, Color.Lime);
 
-                batch.DrawBorder(this.AABB2, 1, Color.Lime);
+                //batch.DrawBorder(this.AABB2, 1, Color.Lime);
+
+                this.collisionShape.Draw(Color.Lime);
 
             }
 
@@ -200,8 +208,17 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
             this.fadingOn = true;
 
-            this.AABB1 = new Rectangle((int)this.position.X - 64, (int)this.position.Y - 28, 82, 56);
-            this.AABB2 = new Rectangle((int)this.position.X, (int)this.position.Y + 10, 64, 12);
+            //this.AABB1 = new Rectangle((int)this.position.X - 64, (int)this.position.Y - 28, 82, 56);
+            //this.AABB2 = new Rectangle((int)this.position.X, (int)this.position.Y + 10, 64, 12);
+
+            var vertices = new List<Vector2>();
+
+            vertices.Add(new Vector2(-64, -28));
+            vertices.Add(new Vector2(-64, 28));
+            vertices.Add(new Vector2(78, 28));
+            vertices.Add(new Vector2(18, -28));
+
+            this.collisionShape = new Polygon2D(SpaceGame.CurrentGraphicsDevice, this.position, vertices);
 
         }
 

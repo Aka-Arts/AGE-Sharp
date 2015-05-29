@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using AkaArts.AgeSharp.Utils.Collision;
+
 namespace AkaArts.AgeSharp.GameProject.Main
 {
     class LaserShot
@@ -20,18 +22,18 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
         internal bool Dead = false;
 
-        readonly float speed = 900f;
+        readonly float speed = 90f;
 
-        Rectangle AABB;
+        Polygon2D collisionShape;
 
         public LaserShot(int x, int y)
         {
 
             this.position = new Vector2(x, y);
 
-            this.AABB = new Rectangle((int)this.position.X - 6, (int)this.position.Y - 6, 30, 6);
+            this.origin = new Vector2(7.5f, 1.5f); // TODO origin strange behaviour?!
 
-            this.origin = new Vector2(15, 3);
+            this.collisionShape = Polygon2D.FromRectangle(SpaceGame.CurrentGraphicsDevice, this.position, new Rectangle(-15, -3, 30, 6));
 
         }
 
@@ -47,7 +49,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
             this.position.X += (speed * time.ElapsedGameTime.Milliseconds / 1000);
 
-            this.AABB.X = (int)this.position.X - 28;
+            this.collisionShape.Origin = this.position;
 
             if (this.position.X > 1000)
             {
@@ -64,7 +66,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
                     continue;
                 }
 
-                if (ast.AABB.Intersects(this.AABB))
+                if (ast.collisionShape.Intersect(this.collisionShape).intersects)
                 {
 
                     this.Dead = true;
@@ -84,7 +86,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
             if (SpaceGame.DEBUGGING)
             {
 
-                batch.DrawBorder(this.AABB, 1, Color.Red);
+                this.collisionShape.Draw(Color.Yellow);
 
             }
 

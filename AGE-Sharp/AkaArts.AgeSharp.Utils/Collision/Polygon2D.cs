@@ -15,15 +15,30 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
         private List<Vector2> vertices = new List<Vector2>();
 
-        private VertexPositionColor[] graphicsVertices;
-
         private BasicEffect effect;
 
         private GraphicsDevice graphics;
 
-        public Vector2 Origin { get { return origin; } }
+        public Vector2 Origin { get { return origin; } set { this.origin = value; } }
 
         public List<Vector2> Vertices { get { return vertices; } }
+
+        public List<Vector2> AbsoluteVertices 
+        { 
+            get 
+            { 
+                var vertices = new List<Vector2>();
+
+                foreach (var vertex in this.vertices)
+                {
+
+                    vertices.Add(new Vector2(vertex.X + this.origin.X, vertex.Y + this.origin.Y));
+
+                }
+
+                return vertices;
+            } 
+        }
 
         public List<Vector2> Edges 
         { 
@@ -57,7 +72,7 @@ namespace AkaArts.AgeSharp.Utils.Collision
             } 
         }
 
-        public Polygon2D(GraphicsDevice g, Vector2 origin, List<Vector2> vertices, Color color)
+        public Polygon2D(GraphicsDevice g, Vector2 origin, List<Vector2> vertices)
         {
 
             this.origin = origin;
@@ -73,7 +88,12 @@ namespace AkaArts.AgeSharp.Utils.Collision
             g.Viewport.Height, 0,    // bottom, top
             0, 1);
 
-            graphicsVertices = new VertexPositionColor[vertices.Count + 1];
+        }
+
+        public void Draw(Color color)
+        {
+
+            var graphicsVertices = new VertexPositionColor[vertices.Count + 1];
 
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -85,11 +105,6 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
             graphicsVertices[vertices.Count] = graphicsVertices[0];
 
-        }
-
-        public void Draw()
-        {
-
             this.effect.CurrentTechnique.Passes[0].Apply();
 
             this.graphics.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, graphicsVertices, 0, graphicsVertices.Count()-1);
@@ -98,17 +113,17 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
         #region FACTORIES
 
-        public static Polygon2D FromRectangle(GraphicsDevice g, Vector2 origin, Rectangle rect, Color color)
+        public static Polygon2D FromRectangle(GraphicsDevice g, Vector2 origin, Rectangle rect)
         {
 
             var vertices = new List<Vector2>();
 
-            vertices.Add(new Vector2(0, 0));
-            vertices.Add(new Vector2(0, rect.Height));
-            vertices.Add(new Vector2(rect.Width, rect.Height));
-            vertices.Add(new Vector2(rect.Width, 0));
+            vertices.Add(new Vector2(rect.X, rect.Y));
+            vertices.Add(new Vector2(rect.X, rect.Y + rect.Height));
+            vertices.Add(new Vector2(rect.X + rect.Width, rect.Y + rect.Height));
+            vertices.Add(new Vector2(rect.X + rect.Width, rect.Y));
 
-            return new Polygon2D(g, origin, vertices, color);
+            return new Polygon2D(g, origin, vertices);
 
         }
 
@@ -116,7 +131,7 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
         #region COLLISION
 
-        struct CollisionResult
+        public struct CollisionResult
         {
 
             public bool intersects;
@@ -183,15 +198,17 @@ namespace AkaArts.AgeSharp.Utils.Collision
         static void ProjectOnAxis(Vector2 axis, Polygon2D polygon, ref float min, ref float max)
         {
 
-            var dotProduct = Vector2.Dot(axis, polygon.Vertices[0]);
+            var vertices = polygon.AbsoluteVertices;
+
+            var dotProduct = Vector2.Dot(axis, vertices[0]);
 
             min = dotProduct;
             max = dotProduct;
 
-            for (int i = 0; i < polygon.Vertices.Count; i++)
+            for (int i = 0; i < vertices.Count; i++)
             {
 
-                dotProduct = Vector2.Dot(polygon.Vertices[i], axis);
+                dotProduct = Vector2.Dot(vertices[i], axis);
 
                 if (dotProduct < min)
                 {
