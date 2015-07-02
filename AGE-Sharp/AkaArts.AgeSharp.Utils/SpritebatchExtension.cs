@@ -14,7 +14,7 @@ namespace AkaArts.AgeSharp.Utils.Screen
         public static void DrawOutlinedString(this SpriteBatch batch, SpriteFont font, String text, Vector2 position, Color color, Color outlineColor, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
             
-            // horizontal/vertikal
+            // horizontal/vertical
             batch.DrawString(font, text, new Vector2(position.X, position.Y - 1), outlineColor, rotation, origin, scale, effects, layerDepth);
             batch.DrawString(font, text, new Vector2(position.X, position.Y + 1), outlineColor, rotation, origin, scale, effects, layerDepth);
             batch.DrawString(font, text, new Vector2(position.X + 1, position.Y), outlineColor, rotation, origin, scale, effects, layerDepth);

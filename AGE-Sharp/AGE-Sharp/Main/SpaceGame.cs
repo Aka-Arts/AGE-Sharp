@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 
 using AkaArts.AgeSharp.Utils.Collision;
+using AkaArts.AgeSharp.Utils;
 
 namespace AkaArts.AgeSharp.GameProject.Main
 {
@@ -191,7 +192,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
 
                     nextLaser = laserCoolDown;
 
-                    laserShot.Play();
+                    laserShot.TryPlay();
 
                     LaserShot newShot = new LaserShot((int)ship.position.X + 38, (int)ship.position.Y + 28);
 

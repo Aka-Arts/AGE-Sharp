@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
 using AkaArts.AgeSharp.Utils.Collision;
+using AkaArts.AgeSharp.Utils;
 
 namespace AkaArts.AgeSharp.GameProject.Main
 {
@@ -306,7 +307,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
                     break;
             }
 
-            this.explosionEffect.Play(1, pitch, 0);
+            this.explosionEffect.TryPlay(1, pitch, 0);
 
             this.hit = true;
 

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 
 using AkaArts.AgeSharp.Utils.Collision;
+using AkaArts.AgeSharp.Utils;
 
 namespace AkaArts.AgeSharp.GameProject.Main
 {
@@ -139,7 +140,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
                     this.dead = true;
                     SpaceGame.GameOver();
 
-                    this.explosionEffect.Play(1, 0, 0);
+                    this.explosionEffect.TryPlay();
 
                 }
 
