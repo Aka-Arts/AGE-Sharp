@@ -8,19 +8,17 @@ namespace AkaArts.AgeSharp.GuiTests
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class GuiTests : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public static const Gui gui;
+        public static readonly Gui gui = new Gui();
 
-        public Game1()
+        public GuiTests()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            gui = new Gui();
         }
 
         /// <summary>

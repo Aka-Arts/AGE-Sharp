@@ -11,11 +11,11 @@ namespace AkaArts.AgeSharp.Utils.Gui
     public interface IGuiEntity
     {
 
-        public void Draw(GameTime time, SpriteBatch batch);
+        void Draw(GameTime time, SpriteBatch batch);
 
-        public void Initialize(ContentManager content);
+        void Initialize(ContentManager content);
 
-        public void Dispose();
+        void Dispose();
 
     }
 }
