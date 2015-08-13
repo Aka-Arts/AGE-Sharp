@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Collision\Helpers.cs" />
     <Compile Include="Collision\LineSegment2D.cs" />
+    <Compile Include="Collision\PrimitiveDrawer.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Collision\Polygon2D.cs" />
     <Compile Include="Gui\Gui.cs" />

@@ -1,4 +1,6 @@
 ﻿using AkaArts.AgeSharp.Utils.Gui;
+using AkaArts.AgeSharp.Utils.Collision;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,7 +15,9 @@ namespace AkaArts.AgeSharp.GuiTests
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public static readonly Gui gui = new Gui();
+        private LineSegment2D line;
+
+        private PrimitiveDrawer drawer;
 
         public GuiTests()
         {
@@ -42,6 +46,10 @@ namespace AkaArts.AgeSharp.GuiTests
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            this.line = new LineSegment2D(new Vector2(50,50), new Vector2(66,66));
+
+            this.drawer = new PrimitiveDrawer(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
         }
@@ -79,6 +87,8 @@ namespace AkaArts.AgeSharp.GuiTests
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            drawer.DrawLine(line, Color.Red);
 
             base.Draw(gameTime);
         }
