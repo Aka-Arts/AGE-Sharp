@@ -131,13 +131,6 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
         #region COLLISION
 
-        public struct CollisionResult
-        {
-
-            public bool intersects;
-
-        }
-
         public CollisionResult Intersect(Polygon2D polygon2)
         {
 
