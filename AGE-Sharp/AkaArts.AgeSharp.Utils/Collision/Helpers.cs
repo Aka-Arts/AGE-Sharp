@@ -35,6 +35,7 @@ namespace AkaArts.AgeSharp.Utils.Collision
     public struct CollisionResult
     {
         public bool intersects;
+        public bool touchs;
         public Vector2 location;
     }
 

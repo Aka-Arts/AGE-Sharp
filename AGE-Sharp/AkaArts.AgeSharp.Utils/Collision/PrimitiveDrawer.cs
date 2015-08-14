@@ -45,5 +45,10 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
         }
 
+        public void DrawPolygon(List<Vector2> vertices, Color color)
+        {
+
+        }
+
     }
 }

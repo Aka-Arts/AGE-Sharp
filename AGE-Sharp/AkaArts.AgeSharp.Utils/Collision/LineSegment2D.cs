@@ -30,6 +30,7 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
             result.location = new Vector2();
             result.intersects = false;
+            result.touchs = false;
 
             var r = line1.B - line1.A;
             var s = line2.B - line2.A;
@@ -62,8 +63,15 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
             if (!rxs.IsZero() && (0 <= t && t <= 1) && (0 <= u && u <= 1))
             {
+                if ((t == 0 || t == 1)&&(u == 0 || u == 1))
+                {
+                    result.touchs = true;
+                }
+                else
+                {
+                    result.intersects = true;
+                }
                 result.location = line1.A + t * r;
-                result.intersects = true;
                 return result;
             }
             return result;
