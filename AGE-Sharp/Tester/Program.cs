@@ -15,12 +15,23 @@ namespace Tester
         static void Main(string[] args)
         {
 
+            do
+            {
+                run();
+                Console.WriteLine("press ENTER to rerun or use command 'exit' to stop ...");
+            } while (!Console.ReadLine().Equals("exit", StringComparison.InvariantCultureIgnoreCase));
+
+        }
+
+        private static void run()
+        {
+
             var random = new Random();
 
             var lines = new List<LineSegment2D>();
             var allVertices = new List<Vector2>();
 
-            for (int i = 0 ; i < 64 ; i++)
+            for (int i = 0; i < 64; i++)
             {
 
                 var originX = random.Next(-100, 101);
@@ -30,14 +41,14 @@ namespace Tester
 
                 Vector2[] vertices = new Vector2[verticesCount];
 
-                for (int j = 0 ; j < verticesCount ; j++)
+                for (int j = 0; j < verticesCount; j++)
                 {
                     var x = random.Next(-10, 11);
                     var y = random.Next(-10, 11);
                     vertices[j] = new Vector2(x, y);
                 }
 
-                for (int j = 0 ; j < vertices.Length ; j++)
+                for (int j = 0; j < vertices.Length; j++)
                 {
                     Vector2 vec1, vec2;
 
@@ -69,14 +80,14 @@ namespace Tester
             var tests = 0;
             var visibles = 0;
 
-            for (int i = 0 ; i < allVertices.Count - 1 ; i++)
+            for (int i = 0; i < allVertices.Count - 1; i++)
             {
 
                 var line = new LineSegment2D(playerPosition, allVertices[i]);
 
                 var visible = true;
 
-                for (int j = 0 ; j < lines.Count ; j++)
+                for (int j = 0; j < lines.Count; j++)
                 {
                     tests++;
 
@@ -100,9 +111,6 @@ namespace Tester
 
             Console.WriteLine("Completed in " + stopwatch.ElapsedMilliseconds + " milliseconds with " + ops + " operations, " + allVertices.Count + " total vertices, " + tests + " tests and " + visibles + " visible vertices");
 
-            Console.ReadLine();
-
-            return;
         }
     }
 }

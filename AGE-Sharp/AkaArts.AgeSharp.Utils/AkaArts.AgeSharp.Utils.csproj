@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>AGE_64.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FarseerPhysics MonoGame">
@@ -65,7 +65,7 @@
     <Compile Include="World\WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AGE_64.ico" />
+    <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
