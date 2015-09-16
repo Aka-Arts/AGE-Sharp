@@ -6,7 +6,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AkaArts.AgeSharp.Utils.Collision
+using AkaArts.AgeSharp.Utils.Collision;
+
+namespace AkaArts.AgeSharp.Utils.Graphics
 {
     public class PrimitiveDrawer
     {
