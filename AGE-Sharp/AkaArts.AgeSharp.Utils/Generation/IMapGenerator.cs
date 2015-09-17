@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AkaArts.AgeSharp.Utils.Generation
 {
-    interface IMapGenerator
+    public interface IMapGenerator
     {
 
         float[][] Generate(int width, int height);

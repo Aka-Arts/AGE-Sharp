@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AkaArts.AgeSharp.Utils.Generation
 {
-    public class PerlinMapGenerator : IMapGenerator
+    public class PerlinMapGenerator
     {
 
         public readonly int seed;

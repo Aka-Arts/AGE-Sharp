@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AkaArts.AgeSharp.Utils.Generation
 {
-    static class Interpolation
+    public static class Interpolation
     {
 
         public static float Linear(float a, float b, float lerp)

@@ -29,13 +29,20 @@ namespace TesterGraphical
 
         Stopwatch stopwatch = new Stopwatch();
 
+        int windowHeight = 600;
+        int windowWidth = 1000;
+
+        int octaves = 7;
+        int dimensions = 512;
+        int currentSeed = 1;
+
         public MapTest()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = 600;
-            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = windowHeight;
+            graphics.PreferredBackBufferWidth = windowWidth;
 
             Content.RootDirectory = "Content";
         }
@@ -66,6 +73,8 @@ namespace TesterGraphical
 
             font = Content.Load<SpriteFont>("fonts/Arial-12-regular");
 
+            map = calcMap(currentSeed, dimensions, dimensions, octaves);
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -94,13 +103,40 @@ namespace TesterGraphical
             {
                 readyForRecalc = false;
 
-                this.map = calcMap(1, 512, 512, 5);
+                currentSeed = rand.Next();
+
+                this.map = calcMap(currentSeed, dimensions, dimensions, octaves);
 
             }
 
-            if (keys.IsKeyUp(Keys.F4))
+            if (keys.IsKeyDown(Keys.Up) && readyForRecalc)
             {
-                readyForRecalc = true;    
+                readyForRecalc = false;
+
+                this.map = calcMap(currentSeed, dimensions, dimensions, ++octaves);
+
+            }
+
+            if (keys.IsKeyDown(Keys.Down) && readyForRecalc)
+            {
+                readyForRecalc = false;
+
+                octaves--;
+
+                if (octaves < 1)
+                {
+                    octaves = 1;
+                }
+
+                this.map = calcMap(currentSeed, dimensions, dimensions, octaves);
+
+            }
+
+            if (keys.IsKeyUp(Keys.F4) &&
+                keys.IsKeyUp(Keys.Up) &&
+                keys.IsKeyUp(Keys.Down))
+            {
+                readyForRecalc = true;
             }
 
             base.Update(gameTime);
@@ -116,9 +152,10 @@ namespace TesterGraphical
 
             spriteBatch.Begin();
 
-                spriteBatch.Draw(map, new Vector2(50, 50), Color.White);
+            spriteBatch.Draw(map, new Vector2((windowWidth / 2) - dimensions / 2, (windowHeight / 2) - dimensions / 2), Color.White);
 
-                spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " milliseconds", new Vector2(5, 5), Color.White);
+            spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " milliseconds", new Vector2(5, 5), Color.White);
+            spriteBatch.DrawString(font, "Perlin: " + octaves + " octaves", new Vector2(300, 5), Color.White);
 
             spriteBatch.End();
 
@@ -136,17 +173,45 @@ namespace TesterGraphical
 
             var texture = new Texture2D(GraphicsDevice, width, height);
 
-            //var pixels = new 
+            var pixels = new Color[width * height];
 
-            //for (int i = 0 ; i < width ; i++)
-            //{
-            //    for (int j = 0 ; j < height ; j++)
-            //    {
-                    
-            //        texture.SetData<>
+            for (int i = 0 ; i < width ; i++)
+            {
+                for (int j = 0 ; j < height ; j++)
+                {
 
-            //    }
-            //}
+                    pixels[(i * width) + j] = Color.Multiply(Color.Green, heightMap[i, j]);
+
+                    if (heightMap[i,j] < 0.35)
+                    {
+
+                        pixels[(i * width) + j] = Color.Multiply(Color.Blue, heightMap[i, j]);
+
+                    }
+
+                    if (heightMap[i, j] > 0.68)
+                    {
+
+                        pixels[(i * width) + j] = Color.Multiply(Color.Gray, heightMap[i, j]);
+
+                    }
+
+                    if (heightMap[i, j] > 0.8)
+                    {
+
+                        pixels[(i * width) + j] = Color.Multiply(Color.White, heightMap[i, j]);
+
+                    }
+
+                    if (heightMap[(i + 1) % width,(j + 1) % height] > heightMap[i, j])
+                    {
+                        pixels[(i * width) + j] = Color.Lerp(pixels[(i * width) + j], Color.Black, 0.5f);
+                    }
+
+                }
+            }
+
+            texture.SetData<Color>(pixels);
 
             stopwatch.Stop();
 
