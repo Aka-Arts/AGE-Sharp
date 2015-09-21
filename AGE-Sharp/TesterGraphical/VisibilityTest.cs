@@ -1,4 +1,5 @@
 ﻿using AkaArts.AgeSharp.Utils.Collision;
+using AkaArts.AgeSharp.Utils.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -126,6 +127,8 @@ namespace TesterGraphical
                 playerPosition = mouseVector;
                 requiresUpdate = true;
             }
+
+            mouse.Position.ToVector2();
 
             if (requiresUpdate)
             {
