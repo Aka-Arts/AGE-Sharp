@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AkaArts.AgeSharp.Utils.Generation
 {
-    class SimplexMapGenerator
+    public class SimplexMapGenerator
     {
 
         private int[] p = {151,160,137,91,90,15,
@@ -65,6 +65,14 @@ namespace AkaArts.AgeSharp.Utils.Generation
                 
             }
 
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    map[x, y] /= weightSum;
+                }
+            }
+
             return map;
 
         }
@@ -108,7 +116,7 @@ namespace AkaArts.AgeSharp.Utils.Generation
             int gi1 = permutations[ii + i1 + permutations[jj + j1]] % 12;
             int gi2 = permutations[ii + 1 + permutations[jj + 1]] % 12;
 
-            double t0 = 0.5 - x0 * x0 + y0 * y0;
+            double t0 = 0.5 - x0 * x0 - y0 * y0;
             if (t0 < 0)
             {
                 n0 = 0.0;
