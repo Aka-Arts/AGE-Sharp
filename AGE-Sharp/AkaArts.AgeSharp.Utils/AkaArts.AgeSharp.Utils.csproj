@@ -53,10 +53,10 @@
   <ItemGroup>
     <Compile Include="Collision\Helpers.cs" />
     <Compile Include="Collision\LineSegment2D.cs" />
+    <Compile Include="Generation\SimplexMapGenerator.cs" />
     <Compile Include="Graphics\PrimitiveDrawer.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Collision\Polygon2D.cs" />
-    <Compile Include="Generation\IMapGenerator.cs" />
     <Compile Include="Generation\Interpolation.cs" />
     <Compile Include="Generation\PerlinMapGenerator.cs" />
     <Compile Include="Gui\Gui.cs" />
