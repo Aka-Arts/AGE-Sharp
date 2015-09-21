@@ -127,8 +127,6 @@ namespace TesterGraphical
                 requiresUpdate = true;
             }
 
-            mouse.Position.ToVector2();
-
             if (requiresUpdate)
             {
                 calcLines();
