@@ -36,6 +36,13 @@ namespace TesterGraphical
         int dimensions = 512;
         int currentSeed = 1;
 
+        float scale = 0.002f;
+        float zoom = 0.0005f;
+        float roughness = 0.5f;
+        float roughnessSteps = 0.025f;
+
+        int wheelValue = 0;
+
         public MapTest()
             : base()
         {
@@ -73,7 +80,7 @@ namespace TesterGraphical
 
             font = Content.Load<SpriteFont>("fonts/Arial-12-regular");
 
-            map = calcMap(currentSeed, dimensions, dimensions, octaves);
+            map = calcMap(currentSeed, dimensions, dimensions, octaves, roughness, scale);
 
             // TODO: use this.Content to load your game content here
         }
@@ -97,46 +104,110 @@ namespace TesterGraphical
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var keys = Keyboard.GetState();
+            bool doRecalc = false;
 
-            if (keys.IsKeyDown(Keys.F4) && readyForRecalc)
+            if (IsActive)
             {
-                readyForRecalc = false;
+                var keys = Keyboard.GetState();
 
-                currentSeed = rand.Next();
+                var mouse = Mouse.GetState();
 
-                this.map = calcMap(currentSeed, dimensions, dimensions, octaves);
-
-            }
-
-            if (keys.IsKeyDown(Keys.Up) && readyForRecalc)
-            {
-                readyForRecalc = false;
-
-                this.map = calcMap(currentSeed, dimensions, dimensions, ++octaves);
-
-            }
-
-            if (keys.IsKeyDown(Keys.Down) && readyForRecalc)
-            {
-                readyForRecalc = false;
-
-                octaves--;
-
-                if (octaves < 1)
+                if (keys.IsKeyDown(Keys.F4) && readyForRecalc)
                 {
-                    octaves = 1;
+                    readyForRecalc = false;
+
+                    currentSeed = rand.Next();
+
+                    doRecalc = true;
+
                 }
 
-                this.map = calcMap(currentSeed, dimensions, dimensions, octaves);
+                if (keys.IsKeyDown(Keys.PageUp) && readyForRecalc)
+                {
+                    readyForRecalc = false;
+
+                    doRecalc = true;
+
+                    octaves++;
+                }
+
+                if (keys.IsKeyDown(Keys.PageDown) && readyForRecalc)
+                {
+                    readyForRecalc = false;
+
+                    octaves--;
+
+                    if (octaves < 1)
+                    {
+                        octaves = 1;
+                    }
+
+                    doRecalc = true;
+                }
+
+                if (keys.IsKeyDown(Keys.Up) && readyForRecalc)
+                {
+                    readyForRecalc = false;
+
+                    doRecalc = true;
+
+                    roughness += roughnessSteps;
+
+                    if (roughness > 1)
+                    {
+                        roughness = 1;
+                    }
+
+                }
+
+                if (keys.IsKeyDown(Keys.Down) && readyForRecalc)
+                {
+                    readyForRecalc = false;
+
+                    roughness -= roughnessSteps;
+
+                    if (roughness < 0)
+                    {
+                        roughness = 0;
+                    }
+
+                    doRecalc = true;
+                }
+
+                if (mouse.ScrollWheelValue != wheelValue)
+                {
+
+                    if (mouse.ScrollWheelValue > wheelValue)
+                    {
+                        scale += zoom;
+                    }
+                    else
+                    {
+                        scale -= zoom;
+                        if (scale < zoom)
+                        {
+                            scale = zoom;
+                        }
+                    }
+
+                    wheelValue = mouse.ScrollWheelValue;
+
+                    doRecalc = true;
+                }
+
+
+                if (keys.IsKeyUp(Keys.F4) &&
+                    keys.IsKeyUp(Keys.Up) &&
+                    keys.IsKeyUp(Keys.Down))
+                {
+                    readyForRecalc = true;
+                }
 
             }
 
-            if (keys.IsKeyUp(Keys.F4) &&
-                keys.IsKeyUp(Keys.Up) &&
-                keys.IsKeyUp(Keys.Down))
+            if (doRecalc)
             {
-                readyForRecalc = true;
+                this.map = calcMap(currentSeed, dimensions, dimensions, octaves, roughness, scale);
             }
 
             base.Update(gameTime);
@@ -155,21 +226,23 @@ namespace TesterGraphical
             spriteBatch.Draw(map, new Vector2((windowWidth / 2) - dimensions / 2, (windowHeight / 2) - dimensions / 2), Color.White);
 
             spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " milliseconds", new Vector2(5, 5), Color.White);
-            spriteBatch.DrawString(font, "Perlin: " + octaves + " octaves", new Vector2(300, 5), Color.White);
+            spriteBatch.DrawString(font, "Simplex: " + octaves + " octaves", new Vector2(300, 5), Color.White);
+            spriteBatch.DrawString(font, "Roughness: " + roughness, new Vector2(5, 25), Color.White);
+            spriteBatch.DrawString(font, "Zoom: " + scale, new Vector2(300, 25), Color.White);
 
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-        private Texture2D calcMap(int seed, int width, int height, int octaves)
+        private Texture2D calcMap(int seed, int width, int height, int octaves, float roughness, float scale)
         {
 
             stopwatch.Restart();
 
-            var perlin = new PerlinMapGenerator(seed);
+            var simplex = new SimplexMapGenerator();
 
-            var heightMap = perlin.Generate(width, height, octaves);
+            var heightMap = simplex.Generate(width, height, octaves, roughness, scale);
 
             var texture = new Texture2D(GraphicsDevice, width, height);
 
@@ -203,10 +276,10 @@ namespace TesterGraphical
 
                     }
 
-                    if (heightMap[(i + 1) % width,(j + 1) % height] > heightMap[i, j])
-                    {
-                        pixels[(i * width) + j] = Color.Lerp(pixels[(i * width) + j], Color.Black, 0.5f);
-                    }
+                    //if (heightMap[(i + 1) % width,(j + 1) % height] > heightMap[i, j])
+                    //{
+                    //    pixels[(i * width) + j] = Color.Lerp(pixels[(i * width) + j], Color.Black, 0.5f);
+                    //}
 
                 }
             }
