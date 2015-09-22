@@ -49,5 +49,24 @@ namespace AkaArts.AgeSharp.Utils
 
         #endregion
 
+        #region ArrayShuffle
+
+        public static void Shuffle<T>(this Random rand, T[] array)
+        {
+
+            int length = array.Length;
+
+            while (length > 1)
+            {
+                int index = rand.Next(length--);
+                T temp = array[length];
+                array[length] = array[index];
+                array[index] = temp;
+            }
+
+        }
+
+        #endregion
+
     }
 }

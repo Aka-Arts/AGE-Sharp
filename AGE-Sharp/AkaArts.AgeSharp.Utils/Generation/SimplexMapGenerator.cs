@@ -28,10 +28,14 @@ namespace AkaArts.AgeSharp.Utils.Generation
 
         private int[] permutations;
 
-        public SimplexMapGenerator()
+        public SimplexMapGenerator(int seed = 0)
         {
 
             permutations = new int[512];
+
+            var rand = new Random(seed);
+
+            rand.Shuffle(p);
 
             for (int i = 0 ; i < permutations.Length ; i++)
             {
