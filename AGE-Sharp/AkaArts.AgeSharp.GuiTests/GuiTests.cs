@@ -1,5 +1,6 @@
 ﻿using AkaArts.AgeSharp.Utils.Gui;
 using AkaArts.AgeSharp.Utils.Collision;
+using AkaArts.AgeSharp.Utils.Graphics;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

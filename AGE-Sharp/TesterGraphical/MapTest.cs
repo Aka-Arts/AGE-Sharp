@@ -21,8 +21,6 @@ namespace TesterGraphical
 
         long calcTime = 0;
 
-        bool readyForRecalc = true;
-
         Random rand = new Random();
 
         float[,] heightMap;
@@ -43,8 +41,8 @@ namespace TesterGraphical
         float roughnessSteps = 0.025f;
 
         float seaLevel = 0.35f;
-        float treeline = 0.65f;
-        float snowline = 0.8f;
+        float treeline = 0.55f;
+        float snowline = 0.65f;
         float levelPerScroll = 0.01f;
 
         int wheelValue = 0;
@@ -111,6 +109,7 @@ namespace TesterGraphical
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            map.Dispose();
         }
 
         /// <summary>
@@ -311,9 +310,9 @@ namespace TesterGraphical
             spriteBatch.DrawString(font, "Roughness: " + roughness, new Vector2(5, 25), Color.White);
             spriteBatch.DrawString(font, "Zoom: " + scale, new Vector2(300, 25), Color.White);
             spriteBatch.DrawString(font, "Seed: " + currentSeed, new Vector2(5, 45), Color.White);
-            spriteBatch.DrawString(font, "Sea Level: " + seaLevel, new Vector2(5, 45), Color.White);
-            spriteBatch.DrawString(font, "Treeline: " + treeline, new Vector2(5, 65), Color.White);
-            spriteBatch.DrawString(font, "Snowline: " + snowline, new Vector2(5, 85), Color.White);
+            spriteBatch.DrawString(font, "Sea Level: " + seaLevel, new Vector2(5, 65), Color.White);
+            spriteBatch.DrawString(font, "Treeline: " + treeline, new Vector2(5, 85), Color.White);
+            spriteBatch.DrawString(font, "Snowline: " + snowline, new Vector2(5, 105), Color.White);
 
             spriteBatch.End();
 
