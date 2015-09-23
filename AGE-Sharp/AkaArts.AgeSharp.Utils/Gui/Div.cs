@@ -5,17 +5,13 @@ using System.Text;
 
 namespace AkaArts.AgeSharp.Utils.Gui
 {
-    public class Gui
+    class Div
     {
 
-        public readonly Div ROOT;
-
-        public Gui()
+        public Div()
         {
-            ROOT = new Div();
+
         }
-
-
 
     }
 }

@@ -5,17 +5,17 @@ using System.Text;
 
 namespace AkaArts.AgeSharp.Utils.Gui
 {
-    public class Gui
+    public struct Style
     {
 
-        public readonly Div ROOT;
+        String position = "absolute";
+        String top = "0";
+        String left = "0";
 
-        public Gui()
+        public Style()
         {
-            ROOT = new Div();
+
         }
-
-
 
     }
 }
