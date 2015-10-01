@@ -326,7 +326,7 @@ namespace TesterGraphical
 
             var simplex = new SimplexMapGenerator(seed);
 
-            var heightMap = simplex.Generate(width, height, octaves, roughness, scale);
+            var heightMap = simplex.GenerateMap(0, 0, width, height, octaves, roughness, scale);
 
             var texture = new Texture2D(GraphicsDevice, width, height);
 

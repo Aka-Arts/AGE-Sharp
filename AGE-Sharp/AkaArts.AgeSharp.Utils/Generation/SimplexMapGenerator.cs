@@ -32,24 +32,67 @@ namespace AkaArts.AgeSharp.Utils.Generation
 
         public SimplexMapGenerator(int seed = 0)
         {
-
             permutations = new int[512];
 
             var rand = new Random(seed);
-
             rand.Shuffle(p);
 
             for (int i = 0 ; i < permutations.Length ; i++)
             {
                 permutations[i] = p[i & 255];
             }
-
         }
 
-        public float[,] Generate(int width, int height, int octaves, float roughness, float scale)
+        /// <summary>
+        /// Generates a simplex map
+        /// </summary>
+        /// <param name="xOffset">The x offset</param>
+        /// <param name="yOffset">The y offset</param>
+        /// <param name="width">The width of the map</param>
+        /// <param name="height">The height of the map</param>
+        /// <param name="octaves">How many octaves should be used (7 are great btw.)</param>
+        /// <param name="roughness">How much a higher octave weight compared to the previous (0.6f seems great)</param>
+        /// <param name="scale">How much scaled the output should be (bigger than 0! The lower, the closer the zoom)</param>
+        /// <returns>A 2D array of floats representing the map</returns>
+        public float[,] GenerateMap(int xOffset, int yOffset, int width, int height, int octaves, float roughness, float scale)
         {
-
             float[,] map = new float[width, height];
+
+            float frequency = scale;
+            float weight = 1;
+            float weightSum = 0;
+
+            // add octaves up
+            for (int octave = 0 ; octave < octaves ; octave++)
+            {
+                for (int x = 0 ; x < width ; x++)
+                {
+                    for (int y = 0 ; y < height ; y++)
+                    {
+                        map[x, y] += (float) GenerateNoise((x + xOffset) * frequency, (y + yOffset) * frequency) * weight;
+                    }
+                }
+
+                frequency *= 2;
+                weightSum += weight;
+                weight *= roughness;
+            }
+
+            // normalize the map by the weight sum
+            for (int x = 0 ; x < width ; x++)
+            {
+                for (int y = 0 ; y < height ; y++)
+                {
+                    map[x, y] /= weightSum;
+                }
+            }
+
+            return map;
+        }
+
+        public float GeneratePoint(int x, int y, int octaves, float roughness, float scale)
+        {
+            float value = 0;
 
             float frequency = scale;
             float weight = 1;
@@ -57,30 +100,15 @@ namespace AkaArts.AgeSharp.Utils.Generation
 
             for (int octave = 0 ; octave < octaves ; octave++)
             {
-                for (int x = 0 ; x < width ; x++)
-                {
-                    for (int y = 0 ; y < height ; y++)
-                    {
-                        map[x, y] += (float) GenerateNoise(x * frequency, y * frequency) * weight;
-                    }
-                }
-
+                value += (float) GenerateNoise(x * frequency, y * frequency) * weight;
                 frequency *= 2;
                 weightSum += weight;
                 weight *= roughness;
-                
             }
 
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    map[x, y] /= weightSum;
-                }
-            }
+            value /= weightSum;
 
-            return map;
-
+            return value;
         }
 
         private double GenerateNoise(float x, float y)
@@ -156,7 +184,7 @@ namespace AkaArts.AgeSharp.Utils.Generation
             }
 
             return ((70.0 * (n0 + n1 + n2)) + 1) / 2;
-            
+
         }
 
         private int fasterFloor(double x)
