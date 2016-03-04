@@ -12,15 +12,47 @@ namespace Tester
 {
     class Program
     {
+        private static Boolean isExitRequested = false;
         static void Main(string[] args)
         {
 
             do
             {
-                run();
-                Console.WriteLine("press ENTER to rerun or use command 'exit' to stop ...");
-            } while (!Console.ReadLine().Equals("exit", StringComparison.InvariantCultureIgnoreCase));
+                Console.WriteLine("enter command or use command 'exit' to stop ...");
+                runCommand();
+            } while (!isExitRequested);
+            Console.WriteLine("BYE!");
+            Console.ReadLine();
+        }
 
+        public static void RequestExit()
+        {
+            isExitRequested = true;
+        }
+
+        private static void runCommand()
+        {
+            var cmd = AkaArts.AgeSharp.Utils.Commanding.Command.Create(Console.ReadLine());
+
+            if (cmd == null)
+            {
+                Console.WriteLine("Invalid cmd!");
+            }
+            else
+            {
+                Console.WriteLine("Raw command: \"" + cmd.Raw + "\"");
+                Console.WriteLine("Instruction: \"" + cmd.Instruction + "\"");
+                Console.WriteLine("Arguments: " + cmd.Arguments.Count);
+                foreach (var arg in cmd.Arguments)
+                {
+                    Console.WriteLine("\t\"" + arg + "\"");
+                }
+
+                if (cmd.Instruction.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    RequestExit();
+                }
+            }
         }
 
         private static void run()

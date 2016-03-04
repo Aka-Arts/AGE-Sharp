@@ -50,13 +50,16 @@
   <ItemGroup>
     <Compile Include="Collision\Helpers.cs" />
     <Compile Include="Collision\LineSegment2D.cs" />
+    <Compile Include="Commanding\BaseCommandHandler.cs" />
+    <Compile Include="Commanding\Command.cs" />
+    <Compile Include="Commanding\CommandController.cs" />
+    <Compile Include="Commanding\ICommandHandler.cs" />
     <Compile Include="Generation\SimplexMapGenerator.cs" />
     <Compile Include="Graphics\PrimitiveDrawer.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Collision\Polygon2D.cs" />
     <Compile Include="Generation\Interpolation.cs" />
     <Compile Include="Generation\PerlinMapGenerator.cs" />
-    <Compile Include="Gui\Div.cs" />
     <Compile Include="Gui\Gui.cs" />
     <Compile Include="Gui\IGuiEntity.cs" />
     <Compile Include="Gui\Style.cs" />
