@@ -50,12 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgeApplication.cs" />
     <Compile Include="Collision\Helpers.cs" />
     <Compile Include="Collision\LineSegment2D.cs" />
     <Compile Include="Commanding\BaseCommandHandler.cs" />
     <Compile Include="Commanding\Command.cs" />
     <Compile Include="Commanding\CommandController.cs" />
     <Compile Include="Commanding\ICommandHandler.cs" />
+    <Compile Include="Console\AgeConsole.cs" />
     <Compile Include="Generation\SimplexMapGenerator.cs" />
     <Compile Include="Graphics\PrimitiveDrawer.cs" />
     <Compile Include="Extensions.cs" />

@@ -7,7 +7,7 @@ namespace AkaArts.AgeSharp.Utils.Commanding
 {
     public interface ICommandHandler
     {
-        void Handle(String cmd);
+        void Handle(Command cmd);
         List<String> GetRegistredCommands();
     }
 }

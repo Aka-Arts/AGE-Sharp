@@ -7,14 +7,37 @@ namespace AkaArts.AgeSharp.Utils.Commanding
 {
     class BaseCommandHandler : ICommandHandler
     {
-        public List<String> GetRegistredCommands()
+        private Dictionary<String, Action<Command>> commands = new Dictionary<String, Action<Command>>();
+        private IBaseCommandable target;
+
+        public BaseCommandHandler(IBaseCommandable target)
         {
-            throw new NotImplementedException();
+            this.target = target;
+            commands.Add("exit", CmdExit);
         }
 
-        public void Handle(String cmd)
+        public List<String> GetRegistredCommands()
         {
-            throw new NotImplementedException();
+            return commands.Keys.ToList();
         }
+
+        public void Handle(Command cmd)
+        {
+            Action<Command> action;
+            if (commands.TryGetValue(cmd.Instruction, out action))
+            {
+                action.Invoke(cmd);
+            }
+        }
+
+        private void CmdExit(Command cmd)
+        {
+            target.RequestExit();
+        }
+    }
+
+    public interface IBaseCommandable
+    {
+        void RequestExit();
     }
 }
