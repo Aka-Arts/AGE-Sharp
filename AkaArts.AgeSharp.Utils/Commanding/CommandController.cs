@@ -35,9 +35,10 @@ namespace AkaArts.AgeSharp.Utils.Commanding
                 }
                 else
                 {
-                    Console.WriteLine("Unknown command: " + command.Instruction);
+                    System.Console.WriteLine("Unknown command: " + command.Instruction);
                 }
             }
+            commandQueue.Clear();
         }
 
         public Boolean AddCommandHandler(ICommandHandler cmdHandler)
