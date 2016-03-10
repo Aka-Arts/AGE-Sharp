@@ -6,13 +6,15 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AkaArts.AgeSharp.Utils;
+using AkaArts.AgeSharp.Utils.Commanding;
 
 namespace TesterGraphical
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class MapTest : Game
+    public class MapTest : AgeApplication
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -27,9 +29,6 @@ namespace TesterGraphical
         Texture2D map;
 
         Stopwatch stopwatch = new Stopwatch();
-
-        int windowHeight = 600;
-        int windowWidth = 1000;
 
         int octaves = 7;
         int dimensions = 512;
@@ -61,11 +60,6 @@ namespace TesterGraphical
         public MapTest()
             : base()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = windowHeight;
-            graphics.PreferredBackBufferWidth = windowWidth;
-
             Content.RootDirectory = "Content";
         }
 
@@ -120,7 +114,7 @@ namespace TesterGraphical
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                CommandController.QueueCommand("exit");
 
             bool doRecalc = false;
             bool doRepaint = false;
@@ -279,6 +273,8 @@ namespace TesterGraphical
                 previousFrame = keys;
             }
 
+            CommandController.ProcessQueue();
+
             if (doRecalc)
             {
                 this.heightMap = calcMap(currentSeed, dimensions, dimensions, octaves, roughness, scale);
@@ -303,7 +299,7 @@ namespace TesterGraphical
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(map, new Vector2((windowWidth / 2) - dimensions / 2, (windowHeight / 2) - dimensions / 2), Color.White);
+            spriteBatch.Draw(map, new Vector2((WindowWidth / 2) - dimensions / 2, (WindowHeight / 2) - dimensions / 2), Color.White);
 
             spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " milliseconds", new Vector2(5, 5), Color.White);
             spriteBatch.DrawString(font, "Simplex: " + octaves + " octaves", new Vector2(300, 5), Color.White);

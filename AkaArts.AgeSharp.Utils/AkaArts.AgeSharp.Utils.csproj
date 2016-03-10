@@ -58,6 +58,7 @@
     <Compile Include="Commanding\CommandController.cs" />
     <Compile Include="Commanding\ICommandHandler.cs" />
     <Compile Include="Console\AgeConsole.cs" />
+    <Compile Include="Content\AgeContentManager.cs" />
     <Compile Include="Generation\SimplexMapGenerator.cs" />
     <Compile Include="Graphics\PrimitiveDrawer.cs" />
     <Compile Include="Extensions.cs" />
@@ -76,7 +77,9 @@
   <ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Content\Arial-12-regular.xnb" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -19,14 +19,29 @@ namespace AkaArts.AgeSharp.Utils.Commanding
             AddCommandHandler(new BaseCommandHandler(app));
         }
 
+        public void QueueCommand(String cmdString)
+        {
+            QueueCommand(Command.Create(cmdString));
+        }
+
         public void QueueCommand(Command cmd)
         {
-            commandQueue.Enqueue(cmd);
+            if (cmd != null)
+            {
+                commandQueue.Enqueue(cmd);
+            }
         }
 
         public void ProcessQueue()
         {
-            foreach (var command in commandQueue)
+            if (commandQueue.Count < 1)
+            {
+                return;
+            }
+
+            var currentQueue = new Queue<Command>(commandQueue);
+            commandQueue.Clear();
+            foreach (var command in currentQueue)
             {
                 ICommandHandler handler;
                 if (commandMapping.TryGetValue(command.Instruction, out handler))
@@ -38,14 +53,13 @@ namespace AkaArts.AgeSharp.Utils.Commanding
                     System.Console.WriteLine("Unknown command: " + command.Instruction);
                 }
             }
-            commandQueue.Clear();
         }
 
-        public Boolean AddCommandHandler(ICommandHandler cmdHandler)
+        public void AddCommandHandler(ICommandHandler cmdHandler)
         {
             if (commandHandlers.Any(x => x.GetType() == cmdHandler.GetType()))
             {
-                return false;
+                throw new CommandingException("There is already a commandHandler of this type registred");
             }
 
             var commands = cmdHandler.GetRegistredCommands();
@@ -54,7 +68,7 @@ namespace AkaArts.AgeSharp.Utils.Commanding
             {
                 if (commandMapping.Any(x => x.Key.Equals(cmd, StringComparison.OrdinalIgnoreCase)))
                 {
-                    return false;
+                    throw new CommandingException("Another commandHandler has already reserved the command '" + cmd + "'");
                 }
             }
             // if all good, add all of them to the mapping
@@ -64,7 +78,11 @@ namespace AkaArts.AgeSharp.Utils.Commanding
             }
 
             commandHandlers.Add(cmdHandler);
-            return true;
+        }
+
+        public class CommandingException : Exception
+        {
+            public CommandingException(String msg) : base(msg) { }
         }
     }
 }
