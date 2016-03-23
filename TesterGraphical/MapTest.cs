@@ -87,10 +87,12 @@ namespace TesterGraphical
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            font = Content.Load<SpriteFont>("fonts/Arial-12-regular");
+            font = AkaArts.AgeSharp.Utils.Content.AgeDefaultContent.FONT; //Content.Load<SpriteFont>("fonts/Arial-12-regular");
 
             heightMap = calcMap(currentSeed, dimensions, dimensions, octaves, roughness, scale);
             map = repaintMap(heightMap);
+
+            this.InputMapper = new DemoInputMapper();
 
             previousFrame = Keyboard.GetState();
             // TODO: use this.Content to load your game content here
@@ -272,8 +274,6 @@ namespace TesterGraphical
 
                 previousFrame = keys;
             }
-
-            CommandController.ProcessQueue();
 
             if (doRecalc)
             {

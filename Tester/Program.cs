@@ -26,7 +26,7 @@ namespace Tester
                 var cmd = Command.Create(Console.ReadLine());
                 cmdCtrl.QueueCommand(cmd);
 
-                cmdCtrl.ProcessQueue();
+                // is now internal --> cmdCtrl.ProcessQueue();
 
             } while (!isExitRequested);
             Console.WriteLine("BYE!");
