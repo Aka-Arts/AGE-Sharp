@@ -32,7 +32,7 @@ namespace AkaArts.AgeSharp.Utils.Commanding
             }
         }
 
-        public void ProcessQueue()
+        internal void ProcessQueue()
         {
             if (commandQueue.Count < 1)
             {
