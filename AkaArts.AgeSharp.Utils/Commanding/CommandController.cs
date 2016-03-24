@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AkaArts.AgeSharp.Utils.Console;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,6 @@ namespace AkaArts.AgeSharp.Utils.Commanding
         private Queue<Command> commandQueue = new Queue<Command>();
         private List<ICommandHandler> commandHandlers = new List<ICommandHandler>();
         private Dictionary<String, ICommandHandler> commandMapping = new Dictionary<string, ICommandHandler>();
-
         /// <summary>
         /// Register internal ICommandHandlers
         /// </summary>
@@ -50,7 +50,7 @@ namespace AkaArts.AgeSharp.Utils.Commanding
                 }
                 else
                 {
-                    System.Console.WriteLine("Unknown command: " + command.Instruction);
+                    AgeApplication.Console.WriteLine("Unknown command: " + command.Raw);
                 }
             }
         }

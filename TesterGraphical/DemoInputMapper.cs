@@ -33,7 +33,7 @@ namespace TesterGraphical
         public void Update(GameTime gameTime, CommandController target)
         {
             var currentFrameKeyboard = Keyboard.GetState();
-            var currentFrameMouse = Mouse.GetState();
+            var currentFrameMouse = Mouse.GetState();          
 
             // reseed
             if (currentFrameKeyboard.IsKeyDown(reseed) && !previousFrameKeyboard.IsKeyDown(reseed))

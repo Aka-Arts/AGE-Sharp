@@ -123,6 +123,8 @@ namespace TesterGraphical
 
             if (IsActive)
             {
+                InputMapper.Update(gameTime, CommandController);
+
                 var keys = Keyboard.GetState();
 
                 var mouse = Mouse.GetState();
@@ -302,9 +304,9 @@ namespace TesterGraphical
             spriteBatch.Draw(map, new Vector2((WindowWidth / 2) - dimensions / 2, (WindowHeight / 2) - dimensions / 2), Color.White);
 
             spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " milliseconds", new Vector2(5, 5), Color.White);
-            spriteBatch.DrawString(font, "Simplex: " + octaves + " octaves", new Vector2(300, 5), Color.White);
+            spriteBatch.DrawString(font, "Simplex: " + octaves + " octaves", new Vector2(450, 5), Color.White);
             spriteBatch.DrawString(font, "Roughness: " + roughness, new Vector2(5, 25), Color.White);
-            spriteBatch.DrawString(font, "Zoom: " + scale, new Vector2(300, 25), Color.White);
+            spriteBatch.DrawString(font, "Zoom: " + scale, new Vector2(450, 25), Color.White);
             spriteBatch.DrawString(font, "Seed: " + currentSeed, new Vector2(5, 45), Color.White);
             spriteBatch.DrawString(font, "Sea Level: " + seaLevel, new Vector2(5, 65), Color.White);
             spriteBatch.DrawString(font, "Treeline: " + treeline, new Vector2(5, 85), Color.White);

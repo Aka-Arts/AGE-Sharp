@@ -58,11 +58,12 @@ namespace AkaArts.AgeSharp.Utils.Content
 
         internal void InitDefaults()
         {
-            var currentAssembly = Assembly.GetAssembly(typeof(AgeDefaultContent));
+            var currentAssembly = Assembly.GetExecutingAssembly();
 
-            var defaultFontStream = currentAssembly.GetManifestResourceStream("AkaArts.AgeSharp.Utils.Content.Arial-12-regular.xnb");
+            var defaultFontStream = currentAssembly.GetManifestResourceStream("AkaArts.AgeSharp.Utils.Content.Monospace-12-regular.xnb");
 
             FONT = this.LoadFromStream<SpriteFont>(defaultFontStream);
+            FONT.DefaultCharacter = '?';
         }
 
         private T LoadFromStream<T>(Stream stream)

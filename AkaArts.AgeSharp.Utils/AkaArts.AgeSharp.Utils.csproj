@@ -68,6 +68,7 @@
     <Compile Include="Gui\Gui.cs" />
     <Compile Include="Gui\IGuiEntity.cs" />
     <Compile Include="Gui\Style.cs" />
+    <Compile Include="Input\ConsoleInputMapper.cs" />
     <Compile Include="Input\IInputMapper.cs" />
     <Compile Include="Input\InputHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\Arial-12-regular.xnb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Monospace-12-regular.xnb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
