@@ -117,7 +117,8 @@ namespace AkaArts.AgeSharp.Utils.Commanding
                             var argument = command.Substring(partStart, i - partStart);
                             parts.Add(argument);
                         }
-                        else if (i + 1 >= length)
+
+                        if (i + 1 >= length)
                         {
                             var argument = command.Substring(partStart, i + 1 - partStart);
                             parts.Add(argument);
