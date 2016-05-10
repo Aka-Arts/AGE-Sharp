@@ -43,6 +43,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DemoInputMapper.cs" />
+    <Compile Include="SimplexMap.cs" />
+    <Compile Include="MapCommandHandler.cs" />
     <Compile Include="MapTest.cs" />
     <Compile Include="VisibilityTest.cs" />
     <Compile Include="Program.cs" />

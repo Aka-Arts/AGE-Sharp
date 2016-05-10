@@ -85,7 +85,7 @@ namespace AkaArts.AgeSharp.Utils.Console
             currentInputBuffer = "";
         }
 
-        internal void WriteLine(String str)
+        public void WriteLine(String str)
         {
             while (lineBuffer.Count >= 5)
             {

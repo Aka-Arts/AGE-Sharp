@@ -38,6 +38,11 @@ namespace Tester
 
         }
 
+        public void CloseConsole()
+        {
+
+        }
+
         public void RequestExit()
         {
             isExitRequested = true;

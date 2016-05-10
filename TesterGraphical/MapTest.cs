@@ -25,8 +25,7 @@ namespace TesterGraphical
 
         Random rand = new Random();
 
-        float[,] heightMap;
-        Texture2D map;
+        SimplexMap map;
 
         Stopwatch stopwatch = new Stopwatch();
 
@@ -89,8 +88,8 @@ namespace TesterGraphical
 
             font = AkaArts.AgeSharp.Utils.Content.AgeDefaultContent.FONT; //Content.Load<SpriteFont>("fonts/Arial-12-regular");
 
-            heightMap = calcMap(currentSeed, dimensions, dimensions, octaves, roughness, scale);
-            map = repaintMap(heightMap);
+            map = new SimplexMap(GraphicsDevice, currentSeed, dimensions, dimensions);
+            CommandController.AddCommandHandler(new MapCommandHandler(map));
 
             this.InputMapper = new DemoInputMapper();
 
@@ -130,163 +129,163 @@ namespace TesterGraphical
                 var mouse = Mouse.GetState();
 
                 // reseed
-                if (keys.IsKeyDown(reseed) && !previousFrame.IsKeyDown(reseed))
-                {
-                    currentSeed = rand.Next();
+                //if (keys.IsKeyDown(reseed) && !previousFrame.IsKeyDown(reseed))
+                //{
+                //    currentSeed = rand.Next();
 
-                    doRecalc = true;
-                }
+                //    doRecalc = true;
+                //}
 
                 // octaves
-                if (keys.IsKeyDown(addOct) && !previousFrame.IsKeyDown(addOct))
-                {
-                    doRecalc = true;
+            //    if (keys.IsKeyDown(addOct) && !previousFrame.IsKeyDown(addOct))
+            //    {
+            //        doRecalc = true;
 
-                    octaves++;
-                }
+            //        octaves++;
+            //    }
 
-                if (keys.IsKeyDown(remOct) && !previousFrame.IsKeyDown(remOct))
-                {
-                    octaves--;
+            //    if (keys.IsKeyDown(remOct) && !previousFrame.IsKeyDown(remOct))
+            //    {
+            //        octaves--;
 
-                    if (octaves < 1)
-                    {
-                        octaves = 1;
-                    }
+            //        if (octaves < 1)
+            //        {
+            //            octaves = 1;
+            //        }
 
-                    doRecalc = true;
-                }
+            //        doRecalc = true;
+            //    }
 
-                // roughness
-                if (keys.IsKeyDown(addRough) && !previousFrame.IsKeyDown(addRough))
-                {
-                    doRecalc = true;
+            //    // roughness
+            //    if (keys.IsKeyDown(addRough) && !previousFrame.IsKeyDown(addRough))
+            //    {
+            //        doRecalc = true;
 
-                    roughness += roughnessSteps;
+            //        roughness += roughnessSteps;
 
-                    if (roughness > 1)
-                    {
-                        roughness = 1;
-                    }
-                }
+            //        if (roughness > 1)
+            //        {
+            //            roughness = 1;
+            //        }
+            //    }
 
-                if (keys.IsKeyDown(remRough) && !previousFrame.IsKeyDown(remRough))
-                {
-                    roughness -= roughnessSteps;
+            //    if (keys.IsKeyDown(remRough) && !previousFrame.IsKeyDown(remRough))
+            //    {
+            //        roughness -= roughnessSteps;
 
-                    if (roughness < 0)
-                    {
-                        roughness = 0;
-                    }
+            //        if (roughness < 0)
+            //        {
+            //            roughness = 0;
+            //        }
 
-                    doRecalc = true;
-                }
+            //        doRecalc = true;
+            //    }
 
-                // wheel
-                if (mouse.ScrollWheelValue != wheelValue)
-                {
+            //    // wheel
+            //    if (mouse.ScrollWheelValue != wheelValue)
+            //    {
 
-                    if (keys.IsKeyDown(scrollSeaLevel))
-                    {
-                        // sealevel
-                        if (mouse.ScrollWheelValue > wheelValue)
-                        {
-                            seaLevel += levelPerScroll;
-                            if (seaLevel > treeline - levelPerScroll)
-                            {
-                                seaLevel = treeline - levelPerScroll;
-                            }
-                        }
-                        else
-                        {
-                            seaLevel -= levelPerScroll;
-                            if (seaLevel < 0)
-                            {
-                                seaLevel = 0;
-                            }
-                        }
+            //        if (keys.IsKeyDown(scrollSeaLevel))
+            //        {
+            //            // sealevel
+            //            if (mouse.ScrollWheelValue > wheelValue)
+            //            {
+            //                seaLevel += levelPerScroll;
+            //                if (seaLevel > treeline - levelPerScroll)
+            //                {
+            //                    seaLevel = treeline - levelPerScroll;
+            //                }
+            //            }
+            //            else
+            //            {
+            //                seaLevel -= levelPerScroll;
+            //                if (seaLevel < 0)
+            //                {
+            //                    seaLevel = 0;
+            //                }
+            //            }
 
-                        doRepaint = true;
-                    }
-                    else if (keys.IsKeyDown(scrollTreeline))
-                    {
-                        // treeline
-                        if (mouse.ScrollWheelValue > wheelValue)
-                        {
-                            treeline += levelPerScroll;
-                            if (treeline > snowline - levelPerScroll)
-                            {
-                                treeline = snowline - levelPerScroll;
-                            }
-                        }
-                        else
-                        {
-                            treeline -= levelPerScroll;
-                            if (treeline < seaLevel + levelPerScroll)
-                            {
-                                treeline = seaLevel + levelPerScroll;
-                            }
-                        }
+            //            doRepaint = true;
+            //        }
+            //        else if (keys.IsKeyDown(scrollTreeline))
+            //        {
+            //            // treeline
+            //            if (mouse.ScrollWheelValue > wheelValue)
+            //            {
+            //                treeline += levelPerScroll;
+            //                if (treeline > snowline - levelPerScroll)
+            //                {
+            //                    treeline = snowline - levelPerScroll;
+            //                }
+            //            }
+            //            else
+            //            {
+            //                treeline -= levelPerScroll;
+            //                if (treeline < seaLevel + levelPerScroll)
+            //                {
+            //                    treeline = seaLevel + levelPerScroll;
+            //                }
+            //            }
 
-                        doRepaint = true;
-                    }
-                    else if (keys.IsKeyDown(scrollSnowline))
-                    {
-                        // snowline
-                        if (mouse.ScrollWheelValue > wheelValue)
-                        {
-                            snowline += levelPerScroll;
-                            if (snowline > 1)
-                            {
-                                snowline = 1;
-                            }
-                        }
-                        else
-                        {
-                            snowline -= levelPerScroll;
-                            if (snowline < treeline + levelPerScroll)
-                            {
-                                snowline = treeline + levelPerScroll;
-                            }
-                        }
+            //            doRepaint = true;
+            //        }
+            //        else if (keys.IsKeyDown(scrollSnowline))
+            //        {
+            //            // snowline
+            //            if (mouse.ScrollWheelValue > wheelValue)
+            //            {
+            //                snowline += levelPerScroll;
+            //                if (snowline > 1)
+            //                {
+            //                    snowline = 1;
+            //                }
+            //            }
+            //            else
+            //            {
+            //                snowline -= levelPerScroll;
+            //                if (snowline < treeline + levelPerScroll)
+            //                {
+            //                    snowline = treeline + levelPerScroll;
+            //                }
+            //            }
 
-                        doRepaint = true;
-                    }
-                    else
-                    {
-                        // zoom
-                        if (mouse.ScrollWheelValue > wheelValue)
-                        {
-                            scale += zoom;
-                        }
-                        else
-                        {
-                            scale -= zoom;
-                            if (scale < zoom)
-                            {
-                                scale = zoom;
-                            }
-                        }
+            //            doRepaint = true;
+            //        }
+            //        else
+            //        {
+            //            // zoom
+            //            if (mouse.ScrollWheelValue > wheelValue)
+            //            {
+            //                scale += zoom;
+            //            }
+            //            else
+            //            {
+            //                scale -= zoom;
+            //                if (scale < zoom)
+            //                {
+            //                    scale = zoom;
+            //                }
+            //            }
 
-                        doRecalc = true;
-                    }
+            //            doRecalc = true;
+            //        }
 
-                    wheelValue = mouse.ScrollWheelValue;
-                }
+            //        wheelValue = mouse.ScrollWheelValue;
+            //    }
 
-                previousFrame = keys;
+            //    previousFrame = keys;
             }
 
-            if (doRecalc)
-            {
-                this.heightMap = calcMap(currentSeed, dimensions, dimensions, octaves, roughness, scale);
-                this.map = repaintMap(this.heightMap);
-            }
+            //if (doRecalc)
+            //{
+            //    this.heightMap = calcMap(currentSeed, dimensions, dimensions, octaves, roughness, scale);
+            //    this.map = repaintMap(this.heightMap);
+            //}
 
-            if (doRepaint)
-            {
-                this.map = repaintMap(this.heightMap);
-            }
+            //if (doRepaint)
+            //{
+            //    this.map = repaintMap(this.heightMap);
+            //}
 
             base.Update(gameTime);
         }
@@ -301,13 +300,13 @@ namespace TesterGraphical
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(map, new Vector2((WindowWidth / 2) - dimensions / 2, (WindowHeight / 2) - dimensions / 2), Color.White);
+            spriteBatch.Draw(map.GetTexture(), new Vector2((WindowWidth / 2) - dimensions / 2, (WindowHeight / 2) - dimensions / 2), Color.White);
 
             spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " milliseconds", new Vector2(5, 5), Color.White);
             spriteBatch.DrawString(font, "Simplex: " + octaves + " octaves", new Vector2(450, 5), Color.White);
             spriteBatch.DrawString(font, "Roughness: " + roughness, new Vector2(5, 25), Color.White);
             spriteBatch.DrawString(font, "Zoom: " + scale, new Vector2(450, 25), Color.White);
-            spriteBatch.DrawString(font, "Seed: " + currentSeed, new Vector2(5, 45), Color.White);
+            spriteBatch.DrawString(font, "Seed: " + map.Seed, new Vector2(5, 45), Color.White);
             spriteBatch.DrawString(font, "Sea Level: " + seaLevel, new Vector2(5, 65), Color.White);
             spriteBatch.DrawString(font, "Treeline: " + treeline, new Vector2(5, 85), Color.White);
             spriteBatch.DrawString(font, "Snowline: " + snowline, new Vector2(5, 105), Color.White);

@@ -90,9 +90,19 @@ namespace AkaArts.AgeSharp.Utils
             base.Draw(gameTime);
         }
 
-        internal void ToggleConsole()
+        public void ToggleConsole()
         {
             IsConsoleOpen = !IsConsoleOpen;
+        }
+
+        public void OpenConsole()
+        {
+            IsConsoleOpen = true;
+        }
+
+        public void CloseConsole()
+        {
+            IsConsoleOpen = false;
         }
 
         public void RequestExit()

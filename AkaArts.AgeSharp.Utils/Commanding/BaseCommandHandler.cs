@@ -14,6 +14,7 @@ namespace AkaArts.AgeSharp.Utils.Commanding
         {
             this.target = target;
             commands.Add("exit", CmdExit);
+            commands.Add("close", CmdCloseConsole);
         }
 
         public List<String> GetRegistredCommands()
@@ -34,10 +35,17 @@ namespace AkaArts.AgeSharp.Utils.Commanding
         {
             target.RequestExit();
         }
+
+        private void CmdCloseConsole(Command cmd)
+        {
+            target.CloseConsole();
+        }
     }
 
     public interface IBaseCommandable
     {
         void RequestExit();
+
+        void CloseConsole();
     }
 }
