@@ -18,7 +18,7 @@ namespace TesterGraphical
         [STAThread]
         static void Main()
         {
-            using (var game = new MapTest())
+            using (var game = new MapTest.MapTest())
                 game.Run();
         }
     }

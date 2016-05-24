@@ -5,32 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TesterGraphical
+namespace TesterGraphical.MapTest
 {
-    class MapCommandHandler : ICommandHandler
-    {
-        private Dictionary<String, Action<Command>> commands = new Dictionary<string, Action<Command>>();
+    class MapCommandHandler : BaseCommandHandler
+    {        
         private SimplexMap targetMap;
 
         public MapCommandHandler(SimplexMap targetMap)
         {
             this.targetMap = targetMap;
             commands.Add("map", cmdMap);
-        }
-
-        public List<String> GetRegistredCommands()
-        {
-            return commands.Keys.ToList();
-        }
-
-        public void Handle(Command cmd)
-        {
-            Action<Command> action;
-            if (commands.TryGetValue(cmd.Instruction, out action))
-            {
-                action.Invoke(cmd);
-            }
-        }
+        }        
 
         private void cmdMap(Command command)
         {

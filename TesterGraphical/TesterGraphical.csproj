@@ -42,11 +42,12 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DemoInputMapper.cs" />
-    <Compile Include="SimplexMap.cs" />
-    <Compile Include="MapCommandHandler.cs" />
-    <Compile Include="MapTest.cs" />
-    <Compile Include="VisibilityTest.cs" />
+    <Compile Include="GameTest\GameTest.cs" />
+    <Compile Include="MapTest\DemoInputHandler.cs" />
+    <Compile Include="MapTest\SimplexMap.cs" />
+    <Compile Include="MapTest\MapCommandHandler.cs" />
+    <Compile Include="MapTest\MapTest.cs" />
+    <Compile Include="VisibilityTest\VisibilityTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,6 +76,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <!-- Specify the search path explicitly so the ResolveAssemblyReferences task picks the right ones -->
   <Target Name="BeforeResolveReferences">
     <CreateProperty Value="$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows;$(AssemblySearchPaths)">

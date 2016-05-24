@@ -26,6 +26,8 @@ namespace AkaArts.AgeSharp.Utils.Console
         private int lineHeight = 20;
         private int offsetLeft = 20;
 
+        private DateTime lastDeleteToLeft = DateTime.Now;
+
         internal AgeConsole(AgeApplication app)
         {
             this.app = app;
@@ -41,10 +43,10 @@ namespace AkaArts.AgeSharp.Utils.Console
         {
         }
 
-        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        internal void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
-            spriteBatch.Draw(consoleBackground, consoleBackgroundRect, Color.White);
+            app.SpriteBatch.Begin();
+            app.SpriteBatch.Draw(consoleBackground, consoleBackgroundRect, Color.White);
 
             var usedLines = lineBuffer.Count;
             for (int i = 0 ; i < usedLines ; i++)
@@ -53,11 +55,11 @@ namespace AkaArts.AgeSharp.Utils.Console
                 var currentLine = lineBuffer[i];
                 var lineVec = new Vector2(offsetLeft, consoleBackgroundRect.Y + lineOffsetY);
 
-                spriteBatch.DrawString(AgeDefaultContent.FONT, currentLine, lineVec, Color.White);
+                app.SpriteBatch.DrawString(AgeDefaultContent.FONT, currentLine, lineVec, Color.White);
             }
 
-            spriteBatch.DrawString(AgeDefaultContent.FONT, ">" + currentInputBuffer, consoleCurrentInputPos, Color.White);            
-            spriteBatch.End();
+            app.SpriteBatch.DrawString(AgeDefaultContent.FONT, ">" + currentInputBuffer, consoleCurrentInputPos, Color.White);
+            app.SpriteBatch.End();
         }
 
         internal void TypeInput(String str)
@@ -67,9 +69,12 @@ namespace AkaArts.AgeSharp.Utils.Console
 
         internal void DeleteInputToLeft()
         {
-            if (currentInputBuffer.Length > 0)
+            var now = DateTime.Now;
+            if (currentInputBuffer.Length > 0 &&
+                (now - lastDeleteToLeft).Milliseconds > 80)
             {
                 currentInputBuffer = currentInputBuffer.Substring(0, currentInputBuffer.Length - 1);
+                lastDeleteToLeft = now;
             }
         }
 

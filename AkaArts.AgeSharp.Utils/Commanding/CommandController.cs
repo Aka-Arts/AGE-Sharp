@@ -9,14 +9,14 @@ namespace AkaArts.AgeSharp.Utils.Commanding
     public class CommandController
     {
         private Queue<Command> commandQueue = new Queue<Command>();
-        private List<ICommandHandler> commandHandlers = new List<ICommandHandler>();
-        private Dictionary<String, ICommandHandler> commandMapping = new Dictionary<string, ICommandHandler>();
+        private List<BaseCommandHandler> commandHandlers = new List<BaseCommandHandler>();
+        private Dictionary<String, BaseCommandHandler> commandMapping = new Dictionary<string, BaseCommandHandler>();
         /// <summary>
         /// Register internal ICommandHandlers
         /// </summary>
-        public CommandController(IBaseCommandable app)
+        public CommandController(AgeApplication app)
         {
-            AddCommandHandler(new BaseCommandHandler(app));
+            AddCommandHandler(new AgeCommandHandler(app));
         }
 
         public void QueueCommand(String cmdString)
@@ -43,7 +43,7 @@ namespace AkaArts.AgeSharp.Utils.Commanding
             commandQueue.Clear();
             foreach (var command in currentQueue)
             {
-                ICommandHandler handler;
+                BaseCommandHandler handler;
                 if (commandMapping.TryGetValue(command.Instruction, out handler))
                 {
                     handler.Handle(command);
@@ -55,7 +55,7 @@ namespace AkaArts.AgeSharp.Utils.Commanding
             }
         }
 
-        public void AddCommandHandler(ICommandHandler cmdHandler)
+        public void AddCommandHandler(BaseCommandHandler cmdHandler)
         {
             if (commandHandlers.Any(x => x.GetType() == cmdHandler.GetType()))
             {

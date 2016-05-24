@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace TesterGraphical
+namespace TesterGraphical.VisibilityTest
 {
     /// <summary>
     /// This is the main type for your game

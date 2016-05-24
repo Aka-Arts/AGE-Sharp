@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace AkaArts.AgeSharp.Utils
 {
-    public class AgeApplication : Game, IBaseCommandable
+    public class AgeApplication : Game
     {
         public readonly CommandController CommandController;
-        public IInputMapper InputMapper;
+        public BaseInputHandler InputHandler;
         public static AgeConsole Console { get; private set; }
-        private ConsoleInputMapper consoleMapper;
+        private ConsoleInputHandler consoleInputHandler;
         public bool IsConsoleOpen { get; private set; } = false;
         public SpriteBatch SpriteBatch { get; private set; }
         public int WindowHeight { get; private set; } = 600;
@@ -36,21 +36,25 @@ namespace AkaArts.AgeSharp.Utils
             this.Window.TextInput += (o, args) => appendToTextBuffer(args);
         }
 
-        private void appendToTextBuffer(TextInputEventArgs args)
-        {
-            TextInputBuffer += args.Character.ToString();
-        }
+        #region Overrides
 
-        protected override void Initialize()
+        protected sealed override void Initialize()
         {
             this.SpriteBatch = new SpriteBatch(this.GraphicsDevice);
             Console = new AgeConsole(this);
-            this.consoleMapper = new ConsoleInputMapper(Console, this);
+            this.consoleInputHandler = new ConsoleInputHandler(Console, this);
 
             var defaultContentLoader = new Content.AgeDefaultContent(this.GraphicsDevice);
             defaultContentLoader.InitDefaults();
 
+            OnAgeInitialized();
+
             base.Initialize();
+        }
+
+        protected virtual void OnAgeInitialized()
+        {
+
         }
 
         protected override void LoadContent()
@@ -61,15 +65,15 @@ namespace AkaArts.AgeSharp.Utils
         {
         }
 
-        protected override void Update(GameTime gameTime)
+        protected sealed override void Update(GameTime gameTime)
         {
-            consoleMapper.Update(gameTime, this.CommandController);
+            consoleInputHandler.Update(gameTime);
 
             if (!IsConsoleOpen)
             {
-                if (InputMapper != null)
+                if (InputHandler != null)
                 {
-                    InputMapper.Update(gameTime, this.CommandController);
+                    InputHandler.Update(gameTime);
                 }
             }
             
@@ -77,18 +81,37 @@ namespace AkaArts.AgeSharp.Utils
 
             TextInputSinceLastFrame = TextInputBuffer;
             TextInputBuffer = "";
+
+            OnAgeUpdated(gameTime);
+
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected virtual void OnAgeUpdated(GameTime gameTime)
         {
+
+        }
+
+        protected sealed override void Draw(GameTime gameTime)
+        {
+            OnAgeDraw(gameTime);
+
             if (IsConsoleOpen)
             {
-                Console.Draw(gameTime, SpriteBatch);
+                Console.Draw(gameTime);
             }            
 
             base.Draw(gameTime);
         }
+
+        protected virtual void OnAgeDraw(GameTime gameTime)
+        {
+
+        }
+
+        #endregion
+
+        #region Publics
 
         public void ToggleConsole()
         {
@@ -109,5 +132,16 @@ namespace AkaArts.AgeSharp.Utils
         {
             this.Exit();
         }
+
+        #endregion
+
+        #region Privates
+
+        private void appendToTextBuffer(TextInputEventArgs args)
+        {
+            TextInputBuffer += args.Character.ToString();
+        }
+
+        #endregion
     }
 }

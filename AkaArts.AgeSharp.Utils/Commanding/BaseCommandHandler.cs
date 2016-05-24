@@ -2,20 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AkaArts.AgeSharp.Utils.Commanding
 {
-    class BaseCommandHandler : ICommandHandler
+    public class BaseCommandHandler
     {
-        private Dictionary<String, Action<Command>> commands = new Dictionary<String, Action<Command>>();
-        private IBaseCommandable target;
-
-        public BaseCommandHandler(IBaseCommandable target)
-        {
-            this.target = target;
-            commands.Add("exit", CmdExit);
-            commands.Add("close", CmdCloseConsole);
-        }
+        protected Dictionary<String, Action<Command>> commands = new Dictionary<string, Action<Command>>();
 
         public List<String> GetRegistredCommands()
         {
@@ -30,22 +23,5 @@ namespace AkaArts.AgeSharp.Utils.Commanding
                 action.Invoke(cmd);
             }
         }
-
-        private void CmdExit(Command cmd)
-        {
-            target.RequestExit();
-        }
-
-        private void CmdCloseConsole(Command cmd)
-        {
-            target.CloseConsole();
-        }
-    }
-
-    public interface IBaseCommandable
-    {
-        void RequestExit();
-
-        void CloseConsole();
     }
 }
