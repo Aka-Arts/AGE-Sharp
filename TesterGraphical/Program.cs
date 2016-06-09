@@ -1,8 +1,6 @@
-﻿#region Using Statements
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-#endregion
 
 namespace TesterGraphical
 {
@@ -18,7 +16,7 @@ namespace TesterGraphical
         [STAThread]
         static void Main()
         {
-            using (var game = new MapTest.MapTest())
+            using (var game = new VisibilityTest.VisibilityTest())
                 game.Run();
         }
     }

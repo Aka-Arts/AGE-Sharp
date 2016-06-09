@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TesterGraphical.VisibilityTest
 {
@@ -32,11 +34,13 @@ namespace TesterGraphical.VisibilityTest
 
         long calcTime = 0;
 
-        bool readyForRecalc = true;
-
         Random random = new Random();
 
         Stopwatch stopwatch = new Stopwatch();
+
+        private bool useMultithreading = true;
+
+        private KeyboardState previousFrameKeys;
 
         public VisibilityTest()
             : base()
@@ -64,6 +68,8 @@ namespace TesterGraphical.VisibilityTest
             this.drawer = new PrimitiveDrawer(GraphicsDevice);
 
             this.Window.Title = "Visibility tests benchmark";
+
+            this.previousFrameKeys = Keyboard.GetState();
 
             base.Initialize();
         }
@@ -103,17 +109,15 @@ namespace TesterGraphical.VisibilityTest
 
             var keys = Keyboard.GetState();
 
-            if (keys.IsKeyDown(Keys.F4) && readyForRecalc)
+            if (keys.IsKeyDown(Keys.F4) && previousFrameKeys.IsKeyUp(Keys.F4))
             {
-                readyForRecalc = false;
-
                 calcLines(true);
-
             }
 
-            if (keys.IsKeyUp(Keys.F4))
+            if (keys.IsKeyDown(Keys.F12) && previousFrameKeys.IsKeyUp(Keys.F12))
             {
-                readyForRecalc = true;    
+                useMultithreading = !useMultithreading;
+                calcLines();
             }
 
             var mouse = Mouse.GetState();
@@ -134,6 +138,8 @@ namespace TesterGraphical.VisibilityTest
             {
                 calcLines();
             }
+
+            previousFrameKeys = keys;
 
             base.Update(gameTime);
         }
@@ -158,10 +164,11 @@ namespace TesterGraphical.VisibilityTest
 
             spriteBatch.Begin();
 
-                spriteBatch.DrawString(font, "Total vertices: " + allVertices.Count, new Vector2(5, 5), Color.White);
-                spriteBatch.DrawString(font, "Total visible: " + visibles, new Vector2(205, 5), Color.White);
-                spriteBatch.DrawString(font, "Total visibility tests: " + tests, new Vector2(405, 5), Color.White);
-                spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " milliseconds", new Vector2(605, 5), Color.White);
+            spriteBatch.DrawString(font, "Total vertices: " + allVertices.Count, new Vector2(5, 5), Color.White);
+            spriteBatch.DrawString(font, "Total visible: " + visibles, new Vector2(155, 5), Color.White);
+            spriteBatch.DrawString(font, "Total visibility tests: " + tests, new Vector2(305, 5), Color.White);
+            spriteBatch.DrawString(font, "Total calculation time: " + calcTime + " ms", new Vector2(505, 5), Color.White);
+            spriteBatch.DrawString(font, "Multithreading (F12) enabled: " + useMultithreading, new Vector2(745, 5), useMultithreading ? Color.Lime : Color.White);
 
             spriteBatch.End();
 
@@ -185,7 +192,7 @@ namespace TesterGraphical.VisibilityTest
                 // 64 objects are perfect, trust me!
                 int numberOfPolygons = 64;
 
-                for (int i = 0; i < numberOfPolygons; i++)
+                for (int i = 0 ; i < numberOfPolygons ; i++)
                 {
 
                     var originX = random.Next(20, 981);
@@ -195,14 +202,14 @@ namespace TesterGraphical.VisibilityTest
 
                     Vector2[] vertices = new Vector2[verticesCount];
 
-                    for (int j = 0; j < verticesCount; j++)
+                    for (int j = 0 ; j < verticesCount ; j++)
                     {
                         var x = random.Next(-20, 21);
                         var y = random.Next(-20, 21);
                         vertices[j] = new Vector2(originX + x, originY + y);
                     }
 
-                    for (int j = 0; j < vertices.Length; j++)
+                    for (int j = 0 ; j < vertices.Length ; j++)
                     {
                         Vector2 vec1, vec2;
 
@@ -223,37 +230,71 @@ namespace TesterGraphical.VisibilityTest
 
 
                 }
-   
+
             }
 
             tests = 0;
             visibles = 0;
 
-            for (int i = 0; i < allVertices.Count - 1; i++)
+            if (useMultithreading)
             {
-
-                var line = new LineSegment2D(playerPosition, allVertices[i]);
-
-                var visible = true;
-
-                for (int j = 0; j < lines.Count; j++)
+                Parallel.ForEach(allVertices, (vertex) =>
                 {
-                    tests++;
+                    var line = new LineSegment2D(playerPosition, vertex);
 
-                    if (line.Intersects(lines[j]).intersects)
+                    var visible = true;
+
+                    for (int j = 0 ; j < lines.Count ; j++)
                     {
-                        visible = false;
-                        break;
+                        Interlocked.Increment(ref tests); // ++ is not threadsafe!
+
+                        if (line.Intersects(lines[j]).intersects)
+                        {
+                            visible = false;
+                            break;
+                        }
+
                     }
 
-                }
-
-                if (visible)
+                    if (visible)
+                    {
+                        // lock needed
+                        lock (rays)
+                        {
+                            rays.Add(line);
+                            visibles++;
+                        }
+                    }
+                });
+            }
+            else
+            {
+                for (int i = 0 ; i < allVertices.Count ; i++)
                 {
-                    rays.Add(line);
-                    visibles++;
-                }
 
+                    var line = new LineSegment2D(playerPosition, allVertices[i]);
+
+                    var visible = true;
+
+                    for (int j = 0 ; j < lines.Count ; j++)
+                    {
+                        tests++;
+
+                        if (line.Intersects(lines[j]).intersects)
+                        {
+                            visible = false;
+                            break;
+                        }
+
+                    }
+
+                    if (visible)
+                    {
+                        // no lock needed
+                        rays.Add(line);
+                        visibles++;
+                    }
+                }
             }
 
             stopwatch.Stop();
@@ -262,5 +303,30 @@ namespace TesterGraphical.VisibilityTest
 
         }
 
+        private void checkWithAllOtherLines(LineSegment2D line)
+        {
+            var visible = true;
+
+            for (int j = 0 ; j < lines.Count ; j++)
+            {
+                tests++;
+
+                if (line.Intersects(lines[j]).intersects)
+                {
+                    visible = false;
+                    break;
+                }
+
+            }
+
+            if (visible)
+            {
+                lock (rays)
+                {
+                    rays.Add(line);
+                }
+                visibles++;
+            }
+        }
     }
 }

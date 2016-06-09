@@ -36,6 +36,9 @@ namespace AkaArts.AgeSharp.Utils.Collision
     {
         public bool intersects;
         public bool touchs;
+        /// <summary>
+        /// {0/0} if intersects is false
+        /// </summary>
         public Vector2 location;
     }
 
