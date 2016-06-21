@@ -8,16 +8,17 @@ namespace AkaArts.AgeSharp.Utils.Collision
 {
     public static class Helpers
     {
-        private const double Epsilon = 1e-10;
+        private const double EpsilonD = 1e-10d;
+        private const float EpsilonF = 1e-5f;
 
         public static bool IsZero(this double d)
         {
-            return Math.Abs(d) < Epsilon;
+            return Math.Abs(d) < EpsilonD;
         }
 
         public static bool IsZero(this float d)
         {
-            return Math.Abs(d) < Epsilon;
+            return Math.Abs(d) < EpsilonF;
         }
 
         public static float Cross(this Vector2 v1, Vector2 v2)
@@ -40,6 +41,13 @@ namespace AkaArts.AgeSharp.Utils.Collision
         /// {0/0} if intersects is false
         /// </summary>
         public Vector2 location;
+    }
+
+    public struct ShapeCollisionResult
+    {
+        public bool Intersects;
+        public Vector2 PushVector;
+        public double PushDistance;
     }
 
 }

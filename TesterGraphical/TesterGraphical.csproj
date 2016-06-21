@@ -42,6 +42,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CollisionTest\CollisionTest.cs" />
     <Compile Include="GameTest\GameTest.cs" />
     <Compile Include="MapTest\DemoInputHandler.cs" />
     <Compile Include="MapTest\SimplexMap.cs" />

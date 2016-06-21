@@ -63,7 +63,7 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
             if (!rxs.IsZero() && (0 <= t && t <= 1) && (0 <= u && u <= 1))
             {
-                if ((t == 0 || t == 1)&&(u == 0 || u == 1))
+                if ((t == 0 || t == 1) && (u == 0 || u == 1))
                 {
                     result.touchs = true;
                 }
@@ -75,6 +75,13 @@ namespace AkaArts.AgeSharp.Utils.Collision
                 return result;
             }
             return result;
+        }
+
+        public static double GetAngleBetween(LineSegment2D line1, LineSegment2D line2)
+        {
+            double angle1 = Math.Atan2(line1.A.Y - line1.B.Y, line1.A.X - line1.B.X);
+            double angle2 = Math.Atan2(line2.A.Y - line2.B.Y, line2.A.X - line2.B.X);
+            return Math.Abs(angle1) - Math.Abs(angle2);
         }
 
         #endregion

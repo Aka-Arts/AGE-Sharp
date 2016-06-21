@@ -66,7 +66,7 @@ namespace AkaArts.AgeSharp.GameProject.Main
                     continue;
                 }
 
-                if (ast.collisionShape.Intersect(this.collisionShape).intersects)
+                if (ast.collisionShape.Intersect(this.collisionShape).Intersects)
                 {
 
                     this.Dead = true;
