@@ -69,6 +69,10 @@ namespace AkaArts.AgeSharp.Utils.Collision
         public Polygon2D(GraphicsDevice g, Vector2 origin, List<Vector2> vertices)
         {
             this.origin = origin;
+            if (vertices.Count < 3)
+            {
+                throw new ArgumentOutOfRangeException("A polygon needs at least 3 vertices");
+            }
             this.vertices = vertices;
             this.graphics = g;
             if (g != null)
@@ -102,6 +106,18 @@ namespace AkaArts.AgeSharp.Utils.Collision
             this.effect.CurrentTechnique.Passes[0].Apply();
             this.graphics.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, graphicsVertices, 0, graphicsVertices.Count() - 1);
         }
+
+        #region OPERATORS
+
+        public static Polygon2D operator +(Polygon2D poly1, Polygon2D poly2)
+        {
+            var allVertices = new List<Vector2>(poly1.AbsoluteVertices);
+            allVertices.AddRange(poly2.AbsoluteVertices);
+            var graphics = poly1.graphics ?? poly2.graphics;
+            return new Polygon2D(graphics, Vector2.Zero, GetConvexHull(allVertices));
+        }
+
+        #endregion
 
         #region FACTORIES
 
@@ -178,60 +194,76 @@ namespace AkaArts.AgeSharp.Utils.Collision
             var result = new ShapeCollisionResult();
             result.Intersects = true;
 
+            // prepare direction vector
+            var normalizedDirection = Vector2.Normalize(direction);
+            var angleForceDirectionToX = Math.Atan2(normalizedDirection.Y, normalizedDirection.X);
+
+            // prepare all useful axes
             var edges1 = polygon1.Edges;
             var edges2 = polygon2.Edges;
 
-            Vector2 currentEdge;
+            var edges = edges1.Union(edges2);
+            var satAxes = new List<Vector2>();
 
-            var normalizedDirection = Vector2.Normalize(direction);
-            var minDirDistance = double.MaxValue;
-
-            for (int i = 0 ; i < edges1.Count + edges2.Count ; i++)
+            foreach (var edge in edges)
             {
-                if (i < edges1.Count)
+                var normal = new Vector2(-edge.Y, edge.X);
+                normal.Normalize();
+
+                var normalDotDiretion = Vector2.Dot(normalizedDirection, normal);
+                var angleNormalToDir = Math.Acos(normalDotDiretion);
+
+                if (angleNormalToDir > MathHelper.PiOver2)
                 {
-                    currentEdge = edges1[i];
+                    normal = Vector2.Negate(normal);
                 }
-                else
+
+                if (!satAxes.Any(x => x.X == normal.X && x.Y == normal.Y))
                 {
-                    currentEdge = edges2[i - edges1.Count];
+                    satAxes.Add(normal);
                 }
+            }
 
-                var currentAxis = new Vector2(-currentEdge.Y, currentEdge.X);
+            var minDirDistance = double.MaxValue;
+            var distAxis = Vector2.Zero;
 
-                currentAxis.Normalize();
-
+            foreach (var satAxis in satAxes)
+            {
                 float min1 = 0;
                 float max1 = 0;
 
                 float min2 = 0;
                 float max2 = 0;
 
-                Polygon2D.ProjectOnAxis(currentAxis, polygon1, ref min1, ref max1);
-                Polygon2D.ProjectOnAxis(currentAxis, polygon2, ref min2, ref max2);
+                Polygon2D.ProjectOnAxis(satAxis, polygon1, ref min1, ref max1);
+                Polygon2D.ProjectOnAxis(satAxis, polygon2, ref min2, ref max2);
 
                 var distance = ProjectionsDistance(min1, max1, min2, max2);
-                if (distance > 0)
+                if (distance >= 0)
                 {
                     result.Intersects = false;
                     break; // at least one SAT was possible
                 }
-                else
+                //else if (distance.IsZero())
+                //{
+                //    // touching
+                //}
+                else if (!satAxis.IsOrthogonalTo(direction))
                 {
                     // calc minDirDistance
-                    var angle1 = Math.Atan2(currentAxis.Y, currentAxis.X);
-                    var angle2 = Math.Atan2(normalizedDirection.Y, normalizedDirection.X);
-                    var angleComp = Math.Abs(Math.Abs(angle1) - Math.Abs(angle2));
+                    var angleAxisToX = Math.Atan2(satAxis.Y, satAxis.X);
+                    var angleAxisToDirection = Math.Abs(angleAxisToX - angleForceDirectionToX);
 
-                    //if (angleComp > MathHelper.PiOver2)
-                    //{
-                    //    angleComp -= MathHelper.PiOver2;
-                    //}
+                    float min2ToMax1;
 
-                    //var angleGrad = angleComp * (180 / Math.PI);
+                    
+                    
+                        min2ToMax1 = max2 - min1;
+                    
 
-                    var hypot = Math.Abs(distance / Math.Cos(angleComp));
-                    if (hypot < minDirDistance)
+                    var hypot = min2ToMax1 / Math.Cos(angleAxisToDirection);
+
+                    if (minDirDistance > Math.Abs(hypot))
                     {
                         minDirDistance = hypot;
                     }
@@ -247,6 +279,7 @@ namespace AkaArts.AgeSharp.Utils.Collision
             {
                 result.PushVector = Vector2.Zero;
                 result.PushDistance = 0;
+                result.distTmp = 0;
             }
 
             return result;
@@ -289,5 +322,64 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
         #endregion
 
+        #region COMBINING
+
+        public static List<Vector2> GetConvexHull(List<Vector2> points)
+        {
+            if (points == null)
+            {
+                return null;
+            }
+            else if (points.Count < 2)
+            {
+                return points;
+            }
+            else
+            {
+                var sortedPoints = points.OrderBy(x => x.X).ThenBy(x => x.Y).ToArray();
+                var pointCount = sortedPoints.Length;
+                var hullIndex = 0;
+                var hull = new Vector2[2 * pointCount];
+
+                // lower hull
+                for (int i = 0 ; i < pointCount ; i++)
+                {
+                    while (hullIndex > 1 && cross(hull[hullIndex - 2], hull[hullIndex - 1], sortedPoints[i]) <= 0)
+                    {
+                        hullIndex--; // "pop & discard" from array
+                    }
+                    hull[hullIndex] = sortedPoints[i];
+                    hullIndex++;
+                }
+
+                var lowerHullEndIndex = hullIndex;
+                // upper hull
+                for (int i = pointCount - 2 ; i >= 0 ; i--)
+                {
+                    while (hullIndex > lowerHullEndIndex && cross(hull[hullIndex - 2], hull[hullIndex - 1], sortedPoints[i]) <= 0)
+                    {
+                        hullIndex--; // "pop & discard" from array
+                    }
+                    hull[hullIndex] = sortedPoints[i];
+                    hullIndex++;
+                }
+
+                var resultHull = new Vector2[hullIndex - 1];
+
+                if (hullIndex > 1)
+                {
+                    Array.Copy(hull, resultHull, hullIndex - 1);
+                }
+
+                return resultHull.ToList();
+            }
+        }
+
+        private static float cross(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
+        }
+
+        #endregion
     }
 }
