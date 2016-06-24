@@ -33,7 +33,7 @@ namespace AkaArts.AgeSharp.Utils.Collision
 
     }
 
-    public struct CollisionResult
+    public class CollisionResult
     {
         public bool intersects;
         public bool touchs;
@@ -43,11 +43,12 @@ namespace AkaArts.AgeSharp.Utils.Collision
         public Vector2 location;
     }
 
-    public struct ShapeCollisionResult
+    public class ShapeCollisionResult
     {
         public bool Intersects;
         public Vector2 PushVector;
         public double PushDistance;
+        public double distTmp;
     }
 
 }
